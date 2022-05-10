@@ -19,16 +19,24 @@ export default {
       dataReady: false,
     };
   },
+  methods: {
+    async getExperiences() {
+      await this.axios
+        .post(url.endpoints.search, url.body(5, "TestDistributor"))
+        .then((response) => {
+          this.exp = response.data.Entities;
+          this.dataReady = true;
+        });
+    },
+  },
   async beforeCreate() {
     await this.axios
       .post(url.endpoints.search, url.body(6, "TestDistributor"))
       .then((response) => {
         this.poi = response.data.Entities;
-        this.dataReady = true;
+
+        this.getExperiences;
       });
-    await this.axios
-      .post(url.endpoints.search, url.body(5, "TestDistributor"))
-      .then((response) => (this.exp = response.data.Entities));
   },
 };
 </script>
