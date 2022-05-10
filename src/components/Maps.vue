@@ -11,7 +11,7 @@
     }"
     style="width: 100vw; height: 100vh"
   >
-    <GMapCluster>
+    <GMapCluster :zoomOnClick="true">
       <GMapMarker
         :key="index"
         v-for="(m, index) in markers"
