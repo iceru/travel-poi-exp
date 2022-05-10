@@ -35,7 +35,7 @@ export default {
       .then((response) => {
         this.poi = response.data.Entities;
 
-        this.getExperiences;
+        this.getExperiences();
       });
   },
 };
