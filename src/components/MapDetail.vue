@@ -36,8 +36,17 @@
     </GMapMap>
     <div class="popupInfo">Click on a pin to see more details</div>
     <div class="navDetail" v-if="selected">
-      <a href="#" @click="prevMarker"><BIconChevronLeft />&nbsp; Prev</a>
-      <a href="#" @click="nextMarker">Next &nbsp;<BIconChevronRight /></a>
+      <div>
+        <a href="#" @click="prevMarker" v-show="itenary > 0"
+          ><BIconChevronLeft />&nbsp; Prev</a
+        >
+      </div>
+
+      <div>
+        <a href="#" v-show="itenary < pathData.length - 1" @click="nextMarker"
+          >Next &nbsp;<BIconChevronRight
+        /></a>
+      </div>
     </div>
     <div class="detailPin" v-if="selected">
       <div class="title">
@@ -53,7 +62,7 @@
 <script>
 export default {
   name: "MapDetail",
-  props: ["path", "pathData"],
+  props: ["path", "pathData", "center"],
   data() {
     return {
       selected: null,
@@ -67,8 +76,6 @@ export default {
       this.selected = geo;
       this.itenary = geo.id;
       this.zoom = 15;
-
-      console.log(this.itenary);
     },
 
     nextMarker() {
@@ -89,6 +96,12 @@ export default {
         this.centerDetail.lng = this.selected.position.lng;
       }
     },
+  },
+  mounted() {
+    this.selectMarker(this.pathData[0]);
+    this.zoom = 8;
+    this.centerDetail.lat = this.selected.position.lat;
+    this.centerDetail.lng = this.selected.position.lng;
   },
 };
 </script>

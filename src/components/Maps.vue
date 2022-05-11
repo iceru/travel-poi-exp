@@ -78,7 +78,7 @@
       >{{ textMore }}</span
     >
     <div class="path" v-if="selectedMarker.Type === 5">
-      <MapDetail :path="path" :pathData="pathData" />
+      <MapDetail :center="center" :path="path" :pathData="pathData" />
     </div>
   </div>
 </template>
@@ -121,6 +121,7 @@ export default {
         this.getExpMarkers();
       }
     },
+    deep: true,
   },
   methods: {
     getMarkers() {
@@ -155,6 +156,7 @@ export default {
       this.more = false;
       this.center = item.position;
       this.path = [];
+      this.pathData = [];
       item.data.Geocodes.map((geo, index) => {
         this.path.push({
           lat: geo.Geocode.Latitude,
@@ -169,7 +171,6 @@ export default {
           },
         });
       });
-      console.log(this.pathData);
     },
     detailClose() {
       this.showDetail = false;
@@ -177,7 +178,6 @@ export default {
       this.path = [];
     },
   },
-  mounted() {},
   components: { MapDetail },
 };
 </script>
