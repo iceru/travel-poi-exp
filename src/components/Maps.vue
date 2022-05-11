@@ -11,7 +11,7 @@
     }"
     style="width: 100vw; height: 100vh"
   >
-    <GMapCluster :zoomOnClick="true" :minimumClusterSize="4">
+    <GMapCluster :zoomOnClick="true" :minimumClusterSize="2">
       <GMapMarker
         :key="index"
         v-for="(m, index) in markers"
@@ -32,15 +32,9 @@
               :src="
                 m.data.Images && m.data.Images.length > 0
                   ? m.data.Images[0].Url
-                  : ''
+                  : '/images/no_image.png'
               "
               :alt="m.data.Name"
-              style="
-                height: 100px;
-                width: auto;
-                margin-bottom: 4px;
-                object-fit: cover;
-              "
             />
           </div>
           <div style="text-align: center">{{ m.data.Name }}</div>
@@ -73,13 +67,18 @@
         :src="
           selectedMarker.Images && selectedMarker.Images.length > 0
             ? selectedMarker.Images[0].Url
-            : ''
+            : '/images/no_image.png'
         "
         alt=""
       />
     </div>
     <div class="title">
       {{ selectedMarker.Name }}
+    </div>
+    <div class="address" v-if="selectedMarker.PhysicalAddress">
+      {{
+        `${selectedMarker?.PhysicalAddress?.Line1}, ${selectedMarker?.PhysicalAddress?.City}, ${selectedMarker?.PhysicalAddress?.State}, ${selectedMarker?.PhysicalAddress?.CountryName}`
+      }}
     </div>
     <div
       v-if="selectedMarker.LongDescription"
@@ -95,45 +94,13 @@
       >{{ textMore }}</span
     >
     <div class="path" v-if="selectedMarker.Type === 5">
-      <GMapMap
-        :center="center"
-        :zoom="8"
-        :options="{
-          zoomControl: false,
-          streetViewControl: false,
-          mapTypeControl: false,
-          scaleControl: false,
-          fullscreenControl: false,
-        }"
-        map-type-id="terrain"
-        style="width: 100%; height: 200px"
-      >
-        <GMapMarker
-          :key="index"
-          v-for="(m, index) in path"
-          :position="m"
-          :clickable="true"
-          :draggable="false"
-        />
-        <GMapPolyline
-          :path="path"
-          :options="{
-            strokeColor: '#B311CF',
-            strokeOpacity: 1.0,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.35,
-          }"
-          :icons="icons"
-          :editable="false"
-          ref="polyline"
-        />
-      </GMapMap>
+      <MapDetail :path="path" :pathData="pathData" :center="center" />
     </div>
   </div>
 </template>
 
 <script>
+import MapDetail from "./MapDetail.vue";
 export default {
   name: "GoogleMaps",
   props: ["poi", "exp", "dataReady"],
@@ -148,17 +115,7 @@ export default {
       iconPoi: "/images/poi.png",
       iconExp: "/images/experience.png",
       path: [],
-      icons: [
-        {
-          icon: {
-            path: "M -2,0 0,-2 2,0 0,2 z",
-            strokeColor: "#F00",
-            fillColor: "#F00",
-            fillOpacity: 1,
-          },
-          offset: "0%",
-        },
-      ],
+      pathData: [],
     };
   },
   computed: {
@@ -194,13 +151,7 @@ export default {
           });
         }
       });
-
-      // if (this.markers.length > 0) {
-      //   this.center.lat = this.markers[0].position.lat;
-      //   this.center.lng = this.markers[0].position.lng;
-      // }
     },
-
     getExpMarkers() {
       this.exp.map((item) => {
         if (item.HasGeocodes) {
@@ -217,17 +168,24 @@ export default {
     selectMarker(item) {
       this.selectedMarker = item.data;
       this.showDetail = true;
+      this.more = false;
       this.center = item.position;
       this.path = [];
-
-      item.data.Geocodes.map((geo) => {
+      item.data.Geocodes.map((geo, index) => {
         this.path.push({
           lat: geo.Geocode.Latitude,
           lng: geo.Geocode.Longitude,
         });
+        this.pathData.push({
+          id: index,
+          data: geo,
+          position: {
+            lat: geo.Geocode.Latitude,
+            lng: geo.Geocode.Longitude,
+          },
+        });
       });
-
-      console.log(this.path);
+      console.log(this.pathData);
     },
     detailClose() {
       this.showDetail = false;
@@ -235,9 +193,8 @@ export default {
       this.path = [];
     },
   },
-  mounted() {
-    console.log(this.exp);
-  },
+  mounted() {},
+  components: { MapDetail },
 };
 </script>
 
@@ -250,7 +207,8 @@ export default {
   top: 0;
   left: 0;
   transform: translateX(-100%);
-  padding: 2rem;
+  padding: 2rem 1rem;
+  padding-top: 1rem;
   overflow: auto;
   transition: transform 0.5s ease;
 
@@ -270,15 +228,21 @@ export default {
     margin-bottom: 1rem;
   }
 
+  .address {
+    margin-bottom: 0.5rem;
+    font-size: small;
+  }
+
   .title {
     font-weight: bold;
-    font-size: 22px;
+    font-size: 20px;
     margin-bottom: 0.5rem;
   }
 
   .more {
     margin-bottom: 1rem;
     cursor: pointer;
+    font-size: 14px;
     color: lightseagreen;
   }
 
@@ -288,7 +252,7 @@ export default {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-    margin-bottom: 0.5rem;
+    font-size: 14px;
 
     &.active {
       display: block;
@@ -302,6 +266,16 @@ export default {
       height: 200px;
       object-fit: cover;
     }
+  }
+}
+
+.popupImage {
+  text-align: center;
+  img {
+    height: 60px;
+    width: auto;
+    margin-bottom: 4px;
+    object-fit: cover;
   }
 }
 </style>
