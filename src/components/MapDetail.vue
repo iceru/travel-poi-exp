@@ -81,6 +81,7 @@ export default {
     nextMarker() {
       if (this.itenary < this.pathData.length - 1) {
         this.itenary++;
+        this.zoom = 15;
         this.selected = this.pathData[this.itenary];
         this.centerDetail.lat = this.selected.position.lat;
         this.centerDetail.lng = this.selected.position.lng;
@@ -99,7 +100,7 @@ export default {
   },
   mounted() {
     this.selectMarker(this.pathData[0]);
-    this.zoom = 8;
+    this.zoom = 15;
     this.centerDetail.lat = this.selected.position.lat;
     this.centerDetail.lng = this.selected.position.lng;
   },

@@ -72,7 +72,10 @@
       {{ selectedMarker.LongDescription }}
     </div>
     <span
-      v-if="selectedMarker.LongDescription"
+      v-if="
+        selectedMarker.LongDescription &&
+        selectedMarker.LongDescription.split(' ').length > 50
+      "
       class="more"
       @click="more = !more"
       >{{ textMore }}</span
@@ -188,6 +191,7 @@ export default {
   height: 100%;
   width: 30%;
   background-color: white;
+  box-shadow: 8px 0 20px rgba($color: #000000, $alpha: 0.2);
   top: 0;
   left: 0;
   transform: translateX(-100%);
@@ -247,8 +251,9 @@ export default {
     margin-bottom: 1rem;
     img {
       width: 100%;
-      height: 200px;
+      height: 30vh;
       object-fit: cover;
+      border-radius: 8px;
     }
   }
 }
@@ -260,6 +265,7 @@ export default {
     width: auto;
     margin-bottom: 4px;
     object-fit: cover;
+    border-radius: 4px;
   }
 }
 </style>
