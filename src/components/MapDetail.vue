@@ -1,7 +1,7 @@
 <template>
   <div class="mapDetailContainer">
     <GMapMap
-      :center="center"
+      :center="centerDetail"
       :zoom="zoom"
       :options="{
         zoomControl: false,
@@ -36,8 +36,8 @@
     </GMapMap>
     <div class="popupInfo">Click on a pin to see more details</div>
     <div class="navDetail" v-if="selected">
-      <a href="#" @click="prevMarker">Prev</a>
-      <a href="#" @click="nextMarker">Next</a>
+      <a href="#" @click="prevMarker"><BIconChevronLeft />&nbsp; Prev</a>
+      <a href="#" @click="nextMarker">Next &nbsp;<BIconChevronRight /></a>
     </div>
     <div class="detailPin" v-if="selected">
       <div class="title">
@@ -53,12 +53,13 @@
 <script>
 export default {
   name: "MapDetail",
-  props: ["path", "center", "pathData"],
+  props: ["path", "pathData"],
   data() {
     return {
       selected: null,
       zoom: 8,
       itenary: 0,
+      centerDetail: { lat: 51.5072, lng: 0.1276 },
     };
   },
   methods: {
@@ -74,8 +75,8 @@ export default {
       if (this.itenary < this.pathData.length - 1) {
         this.itenary++;
         this.selected = this.pathData[this.itenary];
-        this.center.lat = this.selected.position.lat;
-        this.center.lng = this.selected.position.lng;
+        this.centerDetail.lat = this.selected.position.lat;
+        this.centerDetail.lng = this.selected.position.lng;
       }
     },
 
@@ -84,8 +85,8 @@ export default {
         this.itenary--;
         this.selected = this.pathData[this.itenary];
         this.pathData[this.itenary].position;
-        this.center.lat = this.selected.position.lat;
-        this.center.lng = this.selected.position.lng;
+        this.centerDetail.lat = this.selected.position.lat;
+        this.centerDetail.lng = this.selected.position.lng;
       }
     },
   },
@@ -105,12 +106,19 @@ export default {
 
   a {
     color: white;
-    display: block;
+    display: flex;
+    align-items: center;
     text-decoration: none;
     background: cornflowerblue;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
     font-size: 12px;
+
+    svg {
+      width: 10px;
+      height: 10px;
+      margin-top: 1.5px;
+    }
 
     &:hover {
       text-decoration: none;
