@@ -11,7 +11,7 @@
     }"
     style="width: 100vw; height: 100vh"
   >
-    <GMapCluster :zoomOnClick="true" :minimumClusterSize="2">
+    <GMapCluster @click="clusterClick()" :minimumClusterSize="4">
       <GMapMarker
         :key="index"
         v-for="(m, index) in markers"
@@ -74,7 +74,7 @@
     <span
       v-if="
         selectedMarker.LongDescription &&
-        selectedMarker.LongDescription.split(' ').length > 50
+        selectedMarker.LongDescription.split(' ').length > 35
       "
       class="more"
       @click="more = !more"
@@ -179,6 +179,9 @@ export default {
       this.showDetail = false;
       this.readMore = false;
       this.path = [];
+    },
+    clusterClick() {
+      console.log("click");
     },
   },
   components: { MapDetail },
