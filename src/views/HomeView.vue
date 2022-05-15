@@ -1,10 +1,17 @@
 <script setup>
 import GoogleMaps from "@/components/Maps.vue";
+import ListItems from "../components/ListItems.vue";
 </script>
 
 <template>
   <main>
-    <GoogleMaps :poi="poi" :exp="exp" :dataReady="dataReady" />
+    <GoogleMaps
+      :services="services"
+      :poi="poi"
+      :exp="exp"
+      :dataReady="dataReady"
+    />
+    <ListItems :services="services" />
   </main>
 </template>
 
@@ -16,6 +23,7 @@ export default {
     return {
       poi: [],
       exp: [],
+      services: [],
       dataReady: false,
     };
   },
@@ -28,6 +36,15 @@ export default {
           this.dataReady = true;
         });
     },
+
+    async getServices() {
+      await this.axios
+        .post(url.endpoints.search, url.bodyServices)
+        .then((response) => {
+          this.services = response.data.Entities;
+          console.log(this.services);
+        });
+    },
   },
   async beforeCreate() {
     await this.axios
@@ -36,6 +53,7 @@ export default {
         this.poi = response.data.Entities;
 
         this.getExperiences();
+        this.getServices();
       });
   },
 };

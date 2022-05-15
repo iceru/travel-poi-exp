@@ -90,7 +90,7 @@
 import MapDetail from "./MapDetail.vue";
 export default {
   name: "GoogleMaps",
-  props: ["poi", "exp", "dataReady"],
+  props: ["poi", "exp", "dataReady", "services"],
   data() {
     return {
       center: { lat: 51.5072, lng: 0.1276 },
@@ -124,7 +124,12 @@ export default {
         this.getExpMarkers();
       }
     },
-    deep: true,
+
+    services(newServices) {
+      if (newServices.length > 0) {
+        this.getServiceMarkers();
+      }
+    },
   },
   methods: {
     getMarkers() {
@@ -153,6 +158,21 @@ export default {
         }
       });
     },
+
+    getServiceMarkers() {
+      this.services.map((item) => {
+        if (item.HasGeocodes) {
+          this.markers.push({
+            data: item,
+            position: {
+              lat: item.Geocodes[0].Geocode.Latitude,
+              lng: item.Geocodes[0].Geocode.Longitude,
+            },
+          });
+        }
+      });
+    },
+
     selectMarker(item) {
       this.selectedMarker = item.data;
       this.showDetail = true;
@@ -198,7 +218,7 @@ export default {
   top: 0;
   left: 0;
   transform: translateX(-100%);
-  padding: 2rem 1rem;
+  padding: 1rem;
   padding-top: 1rem;
   overflow: auto;
   transition: transform 0.5s ease;

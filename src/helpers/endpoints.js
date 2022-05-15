@@ -43,6 +43,52 @@ const body = (type, distributor, lang) => {
   return request;
 };
 
-const OREndpoint = "https://api.visitnara.jp/api";
+const bodyServices = {
+    Campaign: {
+      AdCampaignCode: "",
+      DealCampaignCode: ""
+    },
+    Filter: {
+      Type: "3",
+      MustBeInAdCampaign: true,
+      MustBeInDealCampaign: false,
+      Bookability: {
+        GuestsCapability: 1,
+        NightsCapability: 1,
+        RateRange: {
+          Min: 0,
+          Max: 99999
+        }
+      },
+      TagCriteria: {
+        IndustryCategoryGroups: []
+      }
+    },
+    Language: "en-US",
+    Output: {
+      CommonContent: {
+        All: true
+      },
+      Availability: {
+        StartDate: new Date(),
+        NumberOfDays: 42,
+        MergeMethod: 2,
+        LowestRateOnly: true
+      },
+      AdvancedContent: true
+    },
+    Paging: {
+      PageNumber: 1,
+      PageSize: 12
+    },
+    Availability: {
+      MergeMethod: 1,
+      Window: {
+        StartDate: new Date(),
+        Size: 42
+      }
+    },
+    ShortName: "TestDistributor"
+}
 
-export default { endpoints, OREndpoint, body };
+export default { endpoints, body, bodyServices };
