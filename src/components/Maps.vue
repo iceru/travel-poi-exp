@@ -1,3 +1,9 @@
+<script setup>
+import { useMapStore } from "../stores/map";
+
+const storeMap = useMapStore();
+</script>
+
 <template v-if="dataReady">
   <GMapMap
     :center="center"
@@ -11,7 +17,7 @@
     }"
     style="width: 100vw; height: 100vh"
   >
-    <GMapCluster @click="clusterClick()" :minimumClusterSize="4">
+    <GMapCluster @click="clusterClick()" :minimumClusterSize="3">
       <GMapMarker
         :key="index"
         v-for="(m, index) in markers"
@@ -22,12 +28,15 @@
           url: m.data.Type === 6 ? iconPoi : iconExp,
           scaledSize: { width: 45, height: 45 },
         }"
-        @click="selectMarker(m)"
+        @click="
+          storeMap.selectMarker(m.data);
+          selectMarker(m);
+        "
         @mouseover="showByIndex = index"
         @mouseout="showByIndex = null"
       >
         <GMapInfoWindow :opened="showByIndex === index">
-          <div class="popupImage" v-if="m.data.Type === 6">
+          <div class="popupImage" v-if="m.data.Type !== 5">
             <img
               :src="
                 m.data.Images && m.data.Images.length > 0
@@ -42,61 +51,16 @@
       </GMapMarker>
     </GMapCluster>
   </GMapMap>
-  <div class="detail" :class="{ active: showDetail }">
-    <div class="icon-close" @click="detailClose()">
-      <BIconXLg />
-    </div>
-    <div class="image" v-if="selectedMarker.Type === 6">
-      <img
-        :src="
-          selectedMarker.Images && selectedMarker.Images.length > 0
-            ? selectedMarker.Images[0].Url
-            : '/images/no_image.png'
-        "
-        alt=""
-      />
-    </div>
-    <div class="title">
-      {{ selectedMarker.Name }}
-    </div>
-    <div class="address" v-if="selectedMarker.PhysicalAddress">
-      {{
-        `${selectedMarker?.PhysicalAddress?.Line1}, ${selectedMarker?.PhysicalAddress?.City}, ${selectedMarker?.PhysicalAddress?.State}, ${selectedMarker?.PhysicalAddress?.CountryName}`
-      }}
-    </div>
-    <div
-      v-if="selectedMarker.LongDescription"
-      class="desc"
-      :class="setReadMore"
-    >
-      {{ selectedMarker.LongDescription }}
-    </div>
-    <span
-      v-if="
-        selectedMarker.LongDescription &&
-        selectedMarker.LongDescription.split(' ').length > 35
-      "
-      class="more"
-      @click="more = !more"
-      >{{ textMore }}</span
-    >
-    <div class="path" v-if="selectedMarker.Type === 5">
-      <MapDetail :center="center" :path="path" :pathData="pathData" />
-    </div>
-  </div>
 </template>
-
 <script>
 import MapDetail from "./MapDetail.vue";
 export default {
   name: "GoogleMaps",
-  props: ["poi", "exp", "dataReady", "services"],
+  props: ["poi", "exp", "services"],
   data() {
     return {
       center: { lat: 51.5072, lng: 0.1276 },
       markers: [],
-      selectedMarker: {},
-      showDetail: false,
       showByIndex: null,
       more: false,
       iconPoi: "/images/poi.png",
@@ -174,31 +138,8 @@ export default {
     },
 
     selectMarker(item) {
-      this.selectedMarker = item.data;
-      this.showDetail = true;
       this.more = false;
       this.center = item.position;
-      this.path = [];
-      this.pathData = [];
-      item.data.Geocodes.map((geo, index) => {
-        this.path.push({
-          lat: geo.Geocode.Latitude,
-          lng: geo.Geocode.Longitude,
-        });
-        this.pathData.push({
-          id: index,
-          data: geo,
-          position: {
-            lat: geo.Geocode.Latitude,
-            lng: geo.Geocode.Longitude,
-          },
-        });
-      });
-    },
-    detailClose() {
-      this.showDetail = false;
-      this.readMore = false;
-      this.path = [];
     },
     clusterClick() {
       console.log("click");
@@ -209,78 +150,6 @@ export default {
 </script>
 
 <style lang="scss">
-.detail {
-  position: absolute;
-  height: 100%;
-  width: 30%;
-  background-color: white;
-  box-shadow: 8px 0 20px rgba($color: #000000, $alpha: 0.2);
-  top: 0;
-  left: 0;
-  transform: translateX(-100%);
-  padding: 1rem;
-  padding-top: 1rem;
-  overflow: auto;
-  transition: transform 0.5s ease;
-
-  @media screen and (max-width: 576px) {
-    width: calc(100vw - 2rem);
-    padding: 1rem;
-  }
-
-  &.active {
-    transition: transform 0.5s ease;
-    transform: translateX(0);
-  }
-
-  .icon-close {
-    text-align: right;
-    cursor: pointer;
-    margin-bottom: 1rem;
-  }
-
-  .address {
-    margin-bottom: 0.5rem;
-    font-size: small;
-  }
-
-  .title {
-    font-weight: bold;
-    font-size: 20px;
-    margin-bottom: 0.5rem;
-  }
-
-  .more {
-    margin-bottom: 1rem;
-    cursor: pointer;
-    font-size: 14px;
-    color: lightseagreen;
-  }
-
-  .desc {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    font-size: 14px;
-
-    &.active {
-      display: block;
-    }
-  }
-
-  .image {
-    margin-bottom: 1rem;
-    img {
-      width: 100%;
-      height: 30vh;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-  }
-}
-
 .popupImage {
   text-align: center;
   img {

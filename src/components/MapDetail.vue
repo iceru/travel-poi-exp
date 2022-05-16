@@ -1,3 +1,17 @@
+<script setup>
+import { computed } from "@vue/runtime-core";
+import { useMapStore } from "../stores/map";
+
+const storeMap = useMapStore();
+
+const path = computed(() => {
+  return storeMap.path;
+});
+const pathData = computed(() => {
+  return storeMap.pathData;
+});
+</script>
+
 <template>
   <div class="mapDetailContainer">
     <GMapMap
@@ -82,7 +96,7 @@
 <script>
 export default {
   name: "MapDetail",
-  props: ["path", "pathData", "center"],
+  props: ["center"],
   data() {
     return {
       selected: null,
