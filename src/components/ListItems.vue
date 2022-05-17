@@ -23,15 +23,24 @@ const selected = computed(() => {
         </div>
       </div>
       <div class="listItems">
-        <div v-for="item in items" :key="item.Id" class="item">
+        <div
+          v-for="item in items"
+          :key="item.data.Id"
+          @click="storeMap.selectMarker(item)"
+          class="item"
+        >
           <div class="itemImage">
             <img
-              :src="item.Images ? item.Images[0].Url : '/images/no_image.png'"
+              :src="
+                item.data.Images
+                  ? item.data.Images[0].Url
+                  : '/images/no_image.png'
+              "
               alt=""
             />
           </div>
-          <div class="itemTitle">{{ item.Name }}</div>
-          <div class="itemDesc">{{ item.LongDescription }}</div>
+          <div class="itemTitle">{{ item.data.Name }}</div>
+          <div class="itemDesc">{{ item.data.LongDescription }}</div>
         </div>
       </div>
     </div>
@@ -52,17 +61,48 @@ export default {
   watch: {
     poi(newPoi) {
       if (newPoi.length > 0) {
-        this.items.push(...this.poi);
+        this.poi.map((item) => {
+          if (item.HasGeocodes) {
+            this.items.push({
+              data: item,
+              position: {
+                lat: item.Geocodes[0].Geocode.Latitude,
+                lng: item.Geocodes[0].Geocode.Longitude,
+              },
+            });
+          }
+        });
       }
     },
     exp(newExp) {
       if (newExp.length > 0) {
-        this.items.push(...this.exp);
+        this.exp.map((item) => {
+          if (item.HasGeocodes) {
+            this.items.push({
+              data: item,
+              position: {
+                lat: item.Geocodes[0].Geocode.Latitude,
+                lng: item.Geocodes[0].Geocode.Longitude,
+              },
+            });
+          }
+        });
       }
     },
     services(newServices) {
       if (newServices.length > 0) {
-        this.items.push(...this.services);
+        this.services.map((item) => {
+          if (item.HasGeocodes) {
+            this.items.push({
+              data: item,
+              position: {
+                lat: item.Geocodes[0].Geocode.Latitude,
+                lng: item.Geocodes[0].Geocode.Longitude,
+              },
+            });
+          }
+        });
+        console.log(this.items);
       }
     },
   },
@@ -112,6 +152,7 @@ export default {
     .item {
       margin-bottom: 1rem;
       font-size: 12px;
+      cursor: pointer;
       .itemImage {
         img {
           width: 100%;

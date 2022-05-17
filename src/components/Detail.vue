@@ -45,8 +45,8 @@ const selected = computed(() => {
         @click="more = !more"
         >{{ textMore }}</span
       >
-      <div class="path" v-if="selected?.Type === 5">
-        <MapDetail :center="center" :path="path" :pathData="pathData" />
+      <div class="path">
+        <MapDetail />
       </div>
     </div>
   </div>

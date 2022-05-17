@@ -1,7 +1,12 @@
 <script setup>
+import { computed } from "@vue/runtime-core";
 import { useMapStore } from "../stores/map";
 
 const storeMap = useMapStore();
+
+const center = computed(() => {
+  return storeMap.center;
+});
 </script>
 
 <template v-if="dataReady">
@@ -29,7 +34,7 @@ const storeMap = useMapStore();
           scaledSize: { width: 45, height: 45 },
         }"
         @click="
-          storeMap.selectMarker(m.data);
+          storeMap.selectMarker(m);
           selectMarker(m);
         "
         @mouseover="showByIndex = index"
@@ -59,7 +64,6 @@ export default {
   props: ["poi", "exp", "services"],
   data() {
     return {
-      center: { lat: 51.5072, lng: 0.1276 },
       markers: [],
       showByIndex: null,
       more: false,
@@ -139,7 +143,6 @@ export default {
 
     selectMarker(item) {
       this.more = false;
-      this.center = item.position;
     },
     clusterClick() {},
   },

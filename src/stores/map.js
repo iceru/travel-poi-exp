@@ -6,6 +6,7 @@ export const useMapStore = defineStore('map', {
         selectedItem: {},
         path: [],
         pathData: [],
+        center: { lat: 51.5072, lng: 0.1276 },
     }),
     getters: {
         getSelected(state) {
@@ -19,14 +20,16 @@ export const useMapStore = defineStore('map', {
         }
     },
     actions: {
-        selectMarker(data) {
-            this.selectedItem = data;
+        selectMarker(marker) {
+            this.selectedItem = marker.data;
             this.path = [];
             this.pathData = [];
-            data.Geocodes.map((geo, index) => {
+            this.center = marker.position;
+            debugger;
+            marker.data.Geocodes && marker.data.Geocodes.map((geo, index) => {
                 this.path.push({
-                lat: geo.Geocode.Latitude,
-                lng: geo.Geocode.Longitude,
+                    lat: geo.Geocode.Latitude,
+                    lng: geo.Geocode.Longitude,
                 });
                 this.pathData.push({
                 id: index,
@@ -37,6 +40,8 @@ export const useMapStore = defineStore('map', {
                 },
                 });
             });
+            console.log(this.path);
+            console.log(this.pathData);
         },
         resetSelected() {
             this.selectedItem = {};
