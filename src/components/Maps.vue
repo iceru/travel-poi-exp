@@ -141,9 +141,7 @@ export default {
       this.more = false;
       this.center = item.position;
     },
-    clusterClick() {
-      console.log("click");
-    },
+    clusterClick() {},
   },
   components: { MapDetail },
 };

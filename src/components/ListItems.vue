@@ -1,8 +1,9 @@
 <script setup>
-import { computed } from "@vue/runtime-core";
-import { useMapStore } from "../stores/map";
 import { useFilterStore } from "../stores/filter";
 import MapDetail from "./MapDetail.vue";
+import { computed } from "@vue/runtime-core";
+import { useMapStore } from "../stores/map";
+import Detail from "./Detail.vue";
 
 const storeFilter = useFilterStore();
 
@@ -35,44 +36,7 @@ const selected = computed(() => {
       </div>
     </div>
 
-    <div class="detail" v-if="Object.keys(selected).length > 0">
-      <div class="icon-close" @click="storeMap.resetSelected()">
-        <BIconXLg />
-      </div>
-      <div class="image" v-if="selected?.Type !== 5">
-        <img
-          :src="
-            selected?.Images && selected?.Images.length > 0
-              ? selected?.Images[0].Url
-              : '/images/no_image.png'
-          "
-          alt=""
-        />
-      </div>
-      <div class="title">
-        {{ selected?.Name }}
-      </div>
-      <div class="address" v-if="selected?.PhysicalAddress">
-        {{
-          `${selected?.PhysicalAddress?.Line1}, ${selected?.PhysicalAddress?.City}, ${selected?.PhysicalAddress?.State}, ${selected?.PhysicalAddress?.CountryName}`
-        }}
-      </div>
-      <div v-if="selected?.LongDescription" class="desc" :class="setReadMore">
-        {{ selected?.LongDescription }}
-      </div>
-      <span
-        v-if="
-          selected?.LongDescription &&
-          selected?.LongDescription.split(' ').length > 35
-        "
-        class="more"
-        @click="more = !more"
-        >{{ textMore }}</span
-      >
-      <div class="path" v-if="selected?.Type === 5">
-        <MapDetail :center="center" :path="path" :pathData="pathData" />
-      </div>
-    </div>
+    <Detail v-if="Object.keys(selected).length > 0" />
   </div>
 </template>
 
@@ -108,7 +72,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   width: calc(30% + 1rem);
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
   height: 99%;
   padding: 1rem;
@@ -172,60 +136,6 @@ export default {
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         font-size: 12px;
-      }
-    }
-  }
-
-  .detail {
-    &.active {
-      transition: transform 0.5s ease;
-      transform: translateX(0);
-    }
-
-    .icon-close {
-      text-align: right;
-      cursor: pointer;
-      margin-bottom: 1rem;
-    }
-
-    .address {
-      margin-bottom: 0.5rem;
-      font-size: small;
-    }
-
-    .title {
-      font-weight: bold;
-      font-size: 20px;
-      margin-bottom: 0.5rem;
-    }
-
-    .more {
-      margin-bottom: 1rem;
-      cursor: pointer;
-      font-size: 14px;
-      color: lightseagreen;
-    }
-
-    .desc {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      font-size: 14px;
-
-      &.active {
-        display: block;
-      }
-    }
-
-    .image {
-      margin-bottom: 1rem;
-      img {
-        width: 100%;
-        height: 30vh;
-        object-fit: cover;
-        border-radius: 8px;
       }
     }
   }
