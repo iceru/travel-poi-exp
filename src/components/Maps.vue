@@ -19,10 +19,16 @@ const center = computed(() => {
       mapTypeControl: false,
       scaleControl: false,
       fullscreenControl: false,
+      styles: [
+        {
+          featureType: 'poi',
+          stylers: [{ visibility: 'off' }],
+        },
+      ],
     }"
     style="width: 100vw; height: 100vh"
   >
-    <GMapCluster @click="clusterClick()" :minimumClusterSize="3">
+    <GMapCluster :zoomOnClick="true" :minimumClusterSize="5">
       <GMapMarker
         :key="index"
         v-for="(m, index) in markers"
@@ -30,12 +36,17 @@ const center = computed(() => {
         :clickable="true"
         :draggable="false"
         :icon="{
-          url: m.data.Type === 6 ? iconPoi : iconExp,
-          scaledSize: { width: 45, height: 45 },
+          url: iconMap(
+            m.data.Type,
+            m.data.IndustryCategoryGroups?.length > 0 &&
+              m.data.IndustryCategoryGroups[0]
+          ),
+          scaledSize: { width: 45, height: 60 },
         }"
         @click="
           storeMap.selectMarker(m);
           selectMarker(m);
+          storeMap.openSidebar();
         "
         @mouseover="showByIndex = index"
         @mouseout="showByIndex = null"
@@ -51,7 +62,9 @@ const center = computed(() => {
               :alt="m.data.Name"
             />
           </div>
-          <div style="text-align: center">{{ m.data.Name }}</div>
+          <div class="popupName">
+            {{ m.data.Name }}
+          </div>
         </GMapInfoWindow>
       </GMapMarker>
     </GMapCluster>
@@ -66,20 +79,15 @@ export default {
     return {
       markers: [],
       showByIndex: null,
-      more: false,
       iconPoi: "/images/poi.png",
       iconExp: "/images/experience.png",
+      iconActiv: "/images/activity.png",
+      iconRestaurant: "/images/restaurant.png",
+      iconShop: "/images/shopping.png",
+      iconAccomm: "/images/accommodation.png",
       path: [],
       pathData: [],
     };
-  },
-  computed: {
-    setReadMore() {
-      return this.more ? "active" : "";
-    },
-    textMore() {
-      return this.more ? "Show Less" : "Show More";
-    },
   },
   watch: {
     poi(newPoi) {
@@ -100,6 +108,34 @@ export default {
     },
   },
   methods: {
+    iconMap(type, group) {
+      let icon = this.iconPoi;
+      switch (type) {
+        case 6:
+          icon = this.iconPoi;
+          break;
+        case 5:
+          icon = this.iconExp;
+          break;
+        case 3:
+          switch (group) {
+            case 0:
+              icon = this.iconAccomm;
+              break;
+            case 1:
+              icon = this.iconActiv;
+              break;
+            case 2:
+              icon = this.iconRestaurant;
+              break;
+            case 3:
+              icon = this.iconShop;
+              break;
+          }
+      }
+
+      return icon;
+    },
     getMarkers() {
       this.poi.map((item) => {
         if (item.HasGeocodes) {
@@ -144,7 +180,6 @@ export default {
     selectMarker(item) {
       this.more = false;
     },
-    clusterClick() {},
   },
   components: { MapDetail },
 };
@@ -160,5 +195,13 @@ export default {
     object-fit: cover;
     border-radius: 4px;
   }
+}
+
+.popupName {
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
 }
 </style>

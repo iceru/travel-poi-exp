@@ -75,7 +75,40 @@ const bodyServices = {
         MergeMethod: 2,
         LowestRateOnly: true
       },
-      AdvancedContent: true
+      AdvancedContent: true,
+          Features: true,
+          Rating: true,
+      Children: {
+        Filter: {
+          Ids: null,
+          Type: 4,
+        },
+        Output: {
+          CommonContent: {
+            All: true
+          },
+          Features: true,
+          Rating: true,
+          Reviews: {
+            IncludeFullDescription: true,
+            IncludeShortReview: true,
+            MaxReturnCount: 10,
+            MaxReturnCountSpecified: true
+          },
+          Availability: {
+            StartDate: "2022-05-20T03:02:35.340Z",
+            NumberOfDays: 7,
+            MergeMethod: 2,
+            FlagCampaign: true
+          }
+        },
+        Children: {
+          Filter: {
+            Ids: null,
+            Type: 4
+          }
+        },
+      },
     },
     Paging: {
       PageNumber: 1,
@@ -91,4 +124,29 @@ const bodyServices = {
     ShortName: "TestDistributor"
 }
 
-export default { endpoints, body, bodyServices };
+const quoteRequest = {
+  request: {
+    CurrentCurrency: "USD",
+    AdCampaignCode: "",
+    IncludeCampaigns: false,
+    IncludeExtras: true,
+    IndustryCategoryGroup: null,
+    IndustryCategory: null,
+    CommencementDate: new Date(),
+    Duration: 1,
+    Configurations: [
+      {
+        Id: "",
+        ProductId: "",
+        Pax: {
+          Adults: 1,
+          Children: 0,
+          Seniors: 0,
+        },
+      },
+    ],
+    Shortname: 'TestDistributor',
+  },
+};
+
+export default { endpoints, body, bodyServices, quoteRequest };

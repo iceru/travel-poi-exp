@@ -20,6 +20,10 @@ const isOpen = computed(() => {
         <label class="form-label" for="">Keywords</label>
         <input class="form-input" type="text" />
       </div>
+      <div class="form-groups">
+        <label class="form-label" for="">Date</label>
+        <input class="form-input" type="date" />
+      </div>
     </div>
   </div>
 </template>
@@ -40,8 +44,8 @@ export default {
   height: 75%;
   width: 50%;
   border-radius: 1rem;
-  padding: 1rem;
-  box-shadow: 0 0 32px rgba($color: #000000, $alpha: 0.2);
+  padding: 1rem 1.5rem;
+  box-shadow: 0 0 32px rgba($color: #000000, $alpha: 0.4);
 
   .icon-close {
     text-align: end;
@@ -55,6 +59,9 @@ export default {
   }
 
   .forms {
+    .form-groups {
+      margin-bottom: 1rem;
+    }
     .form-label {
       display: block;
       margin-bottom: 0.5rem;

@@ -1,6 +1,5 @@
 <script setup>
 import { useFilterStore } from "../stores/filter";
-import MapDetail from "./MapDetail.vue";
 import { computed } from "@vue/runtime-core";
 import { useMapStore } from "../stores/map";
 import Detail from "./Detail.vue";
@@ -12,10 +11,21 @@ const storeMap = useMapStore();
 const selected = computed(() => {
   return storeMap.selectedItem;
 });
+
+const sidebar = computed(() => {
+  return storeMap.sidebarOpen;
+});
 </script>
 
 <template>
-  <div class="container">
+  <div
+    class="iconOpen"
+    @click="storeMap.toggleSidebar()"
+    :class="sidebar ? 'active' : ''"
+  >
+    <BIconLayoutSidebarInset />
+  </div>
+  <div class="container" :class="sidebar ? 'active' : ''">
     <div v-if="Object.keys(selected).length === 0">
       <div class="actions">
         <div @click="storeFilter.openFilter()" class="filterButton">
@@ -39,8 +49,31 @@ const selected = computed(() => {
               alt=""
             />
           </div>
+          <div
+            class="itemBadge"
+            :class="
+              typeName(
+                item.data.Type,
+                item.data.IndustryCategoryGroups?.length > 0 &&
+                  item.data.IndustryCategoryGroups[0],
+                'class'
+              )
+            "
+          >
+            {{
+              typeName(
+                item.data.Type,
+                item.data.IndustryCategoryGroups?.length > 0 &&
+                  item.data.IndustryCategoryGroups[0],
+                "text"
+              )
+            }}
+          </div>
           <div class="itemTitle">{{ item.data.Name }}</div>
           <div class="itemDesc">{{ item.data.LongDescription }}</div>
+          <div class="itemPrice" v-if="item.data.Type === 3">
+            Starts From £{{ item.data.Availability?.Calendar?.LowestRate }}
+          </div>
         </div>
       </div>
     </div>
@@ -92,24 +125,76 @@ export default {
     services(newServices) {
       if (newServices.length > 0) {
         this.services.map((item) => {
-          if (item.HasGeocodes) {
-            this.items.push({
-              data: item,
-              position: {
-                lat: item.Geocodes[0].Geocode.Latitude,
-                lng: item.Geocodes[0].Geocode.Longitude,
-              },
-            });
-          }
+          this.items.push({
+            data: item,
+            position: {
+              lat: item.Geocodes && item.Geocodes[0].Geocode.Latitude,
+              lng: item.Geocodes && item.Geocodes[0].Geocode.Longitude,
+            },
+          });
         });
-        console.log(this.items);
       }
+    },
+  },
+  methods: {
+    typeName(type, group, typeOutput) {
+      let badgeName = "Service";
+      switch (type) {
+        case 6:
+          badgeName = "Point of Interest";
+          break;
+        case 5:
+          badgeName = "Experience";
+          break;
+        case 3:
+          switch (group) {
+            case 0:
+              badgeName = "Accommodation";
+              break;
+            case 1:
+              badgeName = "Activity";
+              break;
+            case 2:
+              badgeName = "Restaurant";
+              break;
+            case 3:
+              badgeName = "Shopping";
+              break;
+          }
+      }
+      badgeName =
+        typeOutput === "class"
+          ? badgeName.replace(/ /g, "-").toLowerCase()
+          : badgeName;
+
+      return badgeName;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.iconOpen {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  background-color: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 15px 4px rgba($color: #000000, $alpha: 0.2);
+  &.active {
+    transition: all 0.2s ease;
+    left: 34%;
+  }
+
+  svg {
+    font-size: 1.5rem;
+  }
+}
 .container {
   width: calc(30% + 1rem);
   overflow-y: auto;
@@ -120,7 +205,14 @@ export default {
   top: 0;
   left: 0;
   background-color: white;
+  transform: translateX(-100%);
+  transition: all 0.2s ease;
   box-shadow: 8px 0 20px rgba($color: #000000, $alpha: 0.15);
+
+  &.active {
+    transition: all 0.2s ease;
+    transform: translateX(0);
+  }
 
   @media screen and (max-width: 576px) {
     width: calc(100vw - 2rem);
@@ -153,6 +245,7 @@ export default {
       margin-bottom: 1rem;
       font-size: 12px;
       cursor: pointer;
+      position: relative;
       .itemImage {
         img {
           width: 100%;
@@ -162,12 +255,51 @@ export default {
         }
       }
 
+      .itemBadge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background-color: rgba($color: gray, $alpha: 0.75);
+        color: white;
+        border-radius: 100px;
+        padding: 4px 12px;
+
+        &.point-of-interest {
+          background-color: rgba($color: #7868e6, $alpha: 0.75);
+        }
+
+        &.experience {
+          background-color: rgba($color: #a7d129, $alpha: 0.75);
+        }
+
+        &.activity {
+          background-color: rgba($color: #ea5455, $alpha: 0.75);
+        }
+
+        &.accommodation {
+          background-color: rgba($color: #2d4059, $alpha: 0.75);
+        }
+
+        &.restaurant {
+          background-color: rgba($color: #f07b3f, $alpha: 0.75);
+        }
+
+        &.shopping {
+          background-color: rgba($color: #ffd460, $alpha: 0.75);
+        }
+      }
+
       .itemTitle {
         font-weight: bold;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
         margin-bottom: 4px;
+      }
+
+      .itemPrice {
+        margin-top: 4px;
+        font-weight: bold;
       }
 
       .itemDesc {

@@ -13,7 +13,7 @@ const pathData = computed(() => {
 </script>
 
 <template>
-  <div class="mapDetailContainer">
+  <div class="mapDetailContainer" v-if="pathData.length > 1">
     <GMapMap
       :center="centerDetail"
       :zoom="zoom"
@@ -33,7 +33,7 @@ const pathData = computed(() => {
         :position="m.position"
         :clickable="true"
         :draggable="false"
-        @click="selectMarker(m)"
+        @click="selectMarkerDetail(m)"
         @mouseover="showByIndex = index"
         @mouseout="showByIndex = null"
       >
@@ -96,7 +96,6 @@ const pathData = computed(() => {
 <script>
 export default {
   name: "MapDetail",
-  props: ["center"],
   data() {
     return {
       selected: null,
@@ -113,9 +112,9 @@ export default {
     };
   },
   methods: {
-    selectMarker(geo) {
+    selectMarkerDetail(geo) {
       this.selected = geo;
-      this.itenary = geo.id;
+      this.itenary = geo?.id;
       this.zoom = 15;
     },
 
@@ -150,10 +149,10 @@ export default {
     },
   },
   mounted() {
-    this.selectMarker(this.pathData[0]);
+    this.selectMarkerDetail(this.pathData[0]);
     this.zoom = 15;
-    this.centerDetail.lat = this.selected.position.lat;
-    this.centerDetail.lng = this.selected.position.lng;
+    this.centerDetail.lat = this.selected?.position?.lat;
+    this.centerDetail.lng = this.selected?.position?.lng;
   },
 };
 </script>
