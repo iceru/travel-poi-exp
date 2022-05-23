@@ -52,6 +52,7 @@ export const useMapStore = defineStore('map', {
             url.quoteRequest.request.Configurations[0].Pax.Adults = parseInt(formValues && formValues.pax) || 2;
             url.quoteRequest.request.CommencementDate = (formValues && formValues.date) || new Date();
             url.quoteRequest.request.Duration = parseInt(formValues && formValues.duration) || 1;
+            this.selectedChildren = [];
             lists.map((item) => {
                 url.quoteRequest.request.IndustryCategoryGroup = item.IndustryCategoryGroups[0];
                 url.quoteRequest.request.IndustryCategory = item.IndustryCategory;

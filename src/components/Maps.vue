@@ -41,7 +41,7 @@ const center = computed(() => {
             m.data.IndustryCategoryGroups?.length > 0 &&
               m.data.IndustryCategoryGroups[0]
           ),
-          scaledSize: { width: 45, height: 60 },
+          scaledSize: { width: 35, height: 45 },
         }"
         @click="
           storeMap.selectMarker(m);
