@@ -111,6 +111,11 @@ export default {
       },
     };
   },
+  watch: {
+    pathData: function (newPathdata, oldPathData) {
+      this.startMapDetail();
+    },
+  },
   methods: {
     selectMarkerDetail(geo) {
       this.selected = geo;
@@ -147,12 +152,15 @@ export default {
       this.itenary = this.pathData.length - 1;
       this.positioning(this.itenary);
     },
+    startMapDetail() {
+      this.selectMarkerDetail(this.pathData[0]);
+      this.zoom = 15;
+      this.centerDetail.lat = this.selected?.position?.lat;
+      this.centerDetail.lng = this.selected?.position?.lng;
+    },
   },
   mounted() {
-    this.selectMarkerDetail(this.pathData[0]);
-    this.zoom = 15;
-    this.centerDetail.lat = this.selected?.position?.lat;
-    this.centerDetail.lng = this.selected?.position?.lng;
+    this.startMapDetail();
   },
 };
 </script>

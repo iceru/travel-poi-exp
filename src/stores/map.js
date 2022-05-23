@@ -42,8 +42,6 @@ export const useMapStore = defineStore('map', {
                 },
                 });
             });
-            console.log(this.path);
-            console.log(this.pathData);
         },
         resetSelected() {
             this.selectedItem = {};
@@ -64,7 +62,6 @@ export const useMapStore = defineStore('map', {
                     .then((response) => {
                       this.selectedChildren.push(response.data);
                     });
-                    console.log(this.selectedChildren);
                 }
                 catch(error) {
                     console.log(error);
