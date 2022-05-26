@@ -2,14 +2,21 @@
 import { useFilterStore } from "../stores/filter";
 import { computed } from "@vue/runtime-core";
 import { useMapStore } from "../stores/map";
+import { useAppStore } from "../stores/app";
 import Detail from "./Detail.vue";
 
 const storeFilter = useFilterStore();
-
+const storeApp = useAppStore();
 const storeMap = useMapStore();
 
 const selected = computed(() => {
   return storeMap.selectedItem;
+});
+
+const items = computed(() => {
+  return storeApp.items?.sort((a, b) =>
+    a.data?.Name?.localeCompare(b.data?.Name)
+  );
 });
 
 const sidebar = computed(() => {
@@ -34,14 +41,14 @@ const sidebar = computed(() => {
       </div>
       <div class="listItems">
         <div
-          v-for="item in items"
+          v-for="item in paginatedItems"
           :key="item.data.Id"
           @click="storeMap.selectMarker(item)"
           class="item"
         >
           <div class="itemImage">
             <img
-              :src="
+              v-lazy="
                 item.data.Images
                   ? item.data.Images[0].Url
                   : '/images/no_image.png'
@@ -76,6 +83,13 @@ const sidebar = computed(() => {
           </div>
         </div>
       </div>
+      <div
+        class="loadMore"
+        v-on:click="loadMore"
+        v-if="currentPage * maxPerPage < items.length"
+      >
+        Load More
+      </div>
     </div>
 
     <Detail v-if="Object.keys(selected).length > 0" />
@@ -88,52 +102,17 @@ export default {
   props: ["services", "poi", "exp"],
   data() {
     return {
-      items: [],
+      currentPage: 1,
+      maxPerPage: 10,
+      showLoadMore: true,
     };
   },
-  watch: {
-    poi(newPoi) {
-      if (newPoi.length > 0) {
-        this.poi.map((item) => {
-          if (item.HasGeocodes) {
-            this.items.push({
-              data: item,
-              position: {
-                lat: item.Geocodes[0].Geocode.Latitude,
-                lng: item.Geocodes[0].Geocode.Longitude,
-              },
-            });
-          }
-        });
-      }
+  computed: {
+    totalItems() {
+      return Object.keys(this.items).length;
     },
-    exp(newExp) {
-      if (newExp.length > 0) {
-        this.exp.map((item) => {
-          if (item.HasGeocodes) {
-            this.items.push({
-              data: item,
-              position: {
-                lat: item.Geocodes[0].Geocode.Latitude,
-                lng: item.Geocodes[0].Geocode.Longitude,
-              },
-            });
-          }
-        });
-      }
-    },
-    services(newServices) {
-      if (newServices.length > 0) {
-        this.services.map((item) => {
-          this.items.push({
-            data: item,
-            position: {
-              lat: item.Geocodes && item.Geocodes[0].Geocode.Latitude,
-              lng: item.Geocodes && item.Geocodes[0].Geocode.Longitude,
-            },
-          });
-        });
-      }
+    paginatedItems() {
+      return this.items.slice(0, this.currentPage * this.maxPerPage);
     },
   },
   methods: {
@@ -169,6 +148,9 @@ export default {
 
       return badgeName;
     },
+    loadMore() {
+      this.currentPage += 1;
+    },
   },
 };
 </script>
@@ -194,6 +176,16 @@ export default {
   svg {
     font-size: 1.5rem;
   }
+}
+
+.loadMore {
+  width: calc(100% - 1rem);
+  text-align: center;
+  background-color: cornflowerblue;
+  color: white;
+  padding: 0.5rem;
+  cursor: pointer;
+  margin-bottom: 2rem;
 }
 .container {
   width: calc(30% + 1rem);

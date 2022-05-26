@@ -23,7 +23,7 @@ const selected = computed(() => {
         v-if="selected?.Type !== 5 && selected?.Images?.length < 2"
       >
         <img
-          :src="
+          v-lazy="
             selected?.Images && selected?.Images.length === 1
               ? selected?.Images[0].Url
               : '/images/no_image.png'
@@ -33,7 +33,7 @@ const selected = computed(() => {
       </div>
       <carousel :items-to-show="1" v-if="selected?.Images?.length > 1">
         <slide v-for="slide in selected?.Images" :key="slide">
-          <img :src="slide.Url" class="img-carousel" :alt="selected?.Name" />
+          <img v-lazy="slide.Url" class="img-carousel" :alt="selected?.Name" />
         </slide>
 
         <template #addons>

@@ -12,30 +12,21 @@ const endpoints = {
 
 const body = (type, distributor, lang) => {
   const request = {
-    Campaign: {
-      AdCampaignCode: "",
-      DealCampaignCode: "",
-    },
     Filter: {
       Type: `${type}`,
-      MustBeInAdCampaign: true,
+      MustBeInAdCampaign: false,
       MustBeInDealCampaign: false,
     },
     Language: `en-US`,
     Output: {
       CommonContent: {
         All: true,
-        Images: true,
       },
       Geocodes: {
         Types: {
           Type: 4,
         },
       },
-    },
-    Paging: {
-      PageNumber: 1,
-      PageSize: 20,
     },
     ShortName: `${distributor}`,
   };
@@ -44,84 +35,80 @@ const body = (type, distributor, lang) => {
 };
 
 const bodyServices = {
-    Campaign: {
-      AdCampaignCode: "",
-      DealCampaignCode: ""
-    },
-    Filter: {
-      Type: "3",
-      MustBeInAdCampaign: true,
-      MustBeInDealCampaign: false,
-      Bookability: {
-        GuestsCapability: 1,
-        NightsCapability: 1,
-        RateRange: {
-          Min: 0,
-          Max: 99999
-        }
-      },
-      TagCriteria: {
-        IndustryCategoryGroups: []
+  Campaign: {
+    AdCampaignCode: "",
+    DealCampaignCode: ""
+  },
+  Filter: {
+    Type: "3",
+    MustBeInAdCampaign: true,
+    MustBeInDealCampaign: false,
+    Bookability: {
+      GuestsCapability: 1,
+      NightsCapability: 1,
+      RateRange: {
+        Min: 0,
+        Max: 99999
       }
     },
-    Language: "en-US",
-    Output: {
-      CommonContent: {
-        All: true
+    TagCriteria: {
+      IndustryCategoryGroups: []
+    }
+  },
+  Language: "en-US",
+  Output: {
+    CommonContent: {
+      All: true
+    },
+    Availability: {
+      StartDate: new Date(),
+      NumberOfDays: 42,
+      MergeMethod: 2,
+      LowestRateOnly: true
+    },
+    AdvancedContent: true,
+    Features: true,
+    Rating: true,
+    Children: {
+      Filter: {
+        Ids: null,
+        Type: 4,
       },
-      Availability: {
-        StartDate: new Date(),
-        NumberOfDays: 42,
-        MergeMethod: 2,
-        LowestRateOnly: true
+      Output: {
+        CommonContent: {
+          All: true
+        },
+        Features: true,
+        Rating: true,
+        Reviews: {
+          IncludeFullDescription: true,
+          IncludeShortReview: true,
+          MaxReturnCount: 10,
+          MaxReturnCountSpecified: true
+        },
+        Availability: {
+          StartDate: "2022-05-20T03:02:35.340Z",
+          NumberOfDays: 7,
+          MergeMethod: 2,
+          FlagCampaign: true
+        }
       },
-      AdvancedContent: true,
-          Features: true,
-          Rating: true,
       Children: {
         Filter: {
           Ids: null,
-          Type: 4,
-        },
-        Output: {
-          CommonContent: {
-            All: true
-          },
-          Features: true,
-          Rating: true,
-          Reviews: {
-            IncludeFullDescription: true,
-            IncludeShortReview: true,
-            MaxReturnCount: 10,
-            MaxReturnCountSpecified: true
-          },
-          Availability: {
-            StartDate: "2022-05-20T03:02:35.340Z",
-            NumberOfDays: 7,
-            MergeMethod: 2,
-            FlagCampaign: true
-          }
-        },
-        Children: {
-          Filter: {
-            Ids: null,
-            Type: 4
-          }
-        },
+          Type: 4
+        }
       },
     },
-    Paging: {
-      PageNumber: 1,
-      PageSize: 12
-    },
-    Availability: {
-      MergeMethod: 1,
-      Window: {
-        StartDate: new Date(),
-        Size: 42
-      }
-    },
-    ShortName: "TestDistributor"
+  },
+  Availability: {
+    MergeMethod: 1,
+    Window: {
+      StartDate: new Date(),
+      Size: 42
+    }
+  },
+  ShortName: "TestDistributor"
 }
 
 const quoteRequest = {

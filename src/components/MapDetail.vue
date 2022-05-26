@@ -1,14 +1,22 @@
 <script setup>
 import { computed } from "@vue/runtime-core";
+import { useAppStore } from "../stores/app";
 import { useMapStore } from "../stores/map";
 
 const storeMap = useMapStore();
+const storeApp = useAppStore();
 
 const path = computed(() => {
   return storeMap.path;
 });
+
 const pathData = computed(() => {
   return storeMap.pathData;
+});
+
+const markers = computed(() => {
+  const filterdMarkers = storeApp.items.filter((el) => el.data.Type !== 5);
+  return filterdMarkers;
 });
 </script>
 
@@ -27,7 +35,7 @@ const pathData = computed(() => {
       map-type-id="terrain"
       style="width: 100%; height: 22vw"
     >
-      <GMapMarker
+      <!-- <GMapMarker
         :key="index"
         v-for="(m, index) in pathData"
         :position="m.position"
@@ -40,6 +48,39 @@ const pathData = computed(() => {
         <GMapInfoWindow :opened="showByIndex === index">
           <div class="popupTitle">{{ m.data.Title }}</div>
           <div class="popupDesc">{{ m.data.Description }}</div>
+        </GMapInfoWindow>
+      </GMapMarker> -->
+      <GMapMarker
+        :key="index"
+        v-for="(m, index) in markers"
+        :position="m.position"
+        :clickable="true"
+        :draggable="false"
+        :icon="{
+          url: iconMap(
+            m.data.Type,
+            m.data.IndustryCategoryGroups?.length > 0 &&
+              m.data.IndustryCategoryGroups[0]
+          ),
+          scaledSize: { width: 35, height: 45 },
+        }"
+        @click="selectMarkerDetail(m)"
+        @mouseover="showByIndex = index"
+        @mouseout="showByIndex = null"
+      >
+        <GMapInfoWindow :opened="showByIndex === index">
+          <div class="popupImage" v-if="m.data.Type !== 5">
+            <img
+              v-lazy="
+                m.data.Images && m.data.Images.length > 0
+                  ? m.data.Images[0].Url
+                  : '/images/no_image.png'
+              "
+              :alt="m.data.Name"
+            />
+          </div>
+          <div class="popupTitle">{{ m.data.Name }}</div>
+          <div class="popupDesc">{{ m.data.LongDescription }}</div>
         </GMapInfoWindow>
       </GMapMarker>
       <GMapPolyline
@@ -90,15 +131,61 @@ const pathData = computed(() => {
         {{ selected?.data?.Description }}
       </div>
     </div>
+
+    <div class="detailActivity" v-if="selectedActivity">
+      <div
+        class="image"
+        v-if="
+          selectedActivity?.data?.Type !== 5 &&
+          selectedActivity?.data?.Images?.length < 2
+        "
+      >
+        <img
+          v-lazy="
+            selectedActivity?.data?.Images &&
+            selectedActivity?.data?.Images.length === 1
+              ? selectedActivity?.data?.Images[0].Url
+              : '/images/no_image.png'
+          "
+          alt=""
+        />
+      </div>
+      <carousel
+        :items-to-show="1"
+        v-if="selectedActivity?.data?.Images?.length > 1"
+      >
+        <slide v-for="slide in selectedActivity?.data?.Images" :key="slide">
+          <img
+            v-lazy="slide.Url"
+            class="img-carousel"
+            :alt="selectedActivity?.data?.Name"
+          />
+        </slide>
+
+        <template #addons>
+          <navigation />
+          <pagination />
+        </template>
+      </carousel>
+      <div class="title">
+        {{ selectedActivity?.data?.Name }}
+      </div>
+      <div class="desc">
+        {{ selectedActivity?.data?.LongDescription }}
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+
 export default {
   name: "MapDetail",
   data() {
     return {
       selected: null,
+      selectedActivity: null,
       zoom: 8,
       itenary: 0,
       showByIndex: null,
@@ -109,6 +196,12 @@ export default {
         fillColor: "#F00",
         fillOpacity: 1,
       },
+      iconPoi: "/images/poi.png",
+      iconExp: "/images/experience.png",
+      iconActiv: "/images/activity.png",
+      iconRestaurant: "/images/restaurant.png",
+      iconShop: "/images/shopping.png",
+      iconAccomm: "/images/accommodation.png",
     };
   },
   watch: {
@@ -120,7 +213,8 @@ export default {
     selectMarkerDetail(geo) {
       this.selected = geo;
       this.itenary = geo?.id;
-      this.zoom = 15;
+      this.zoom = 10;
+      this.selectedActivity = geo;
     },
 
     positioning(itenary) {
@@ -132,7 +226,7 @@ export default {
     nextMarker() {
       if (this.itenary < this.pathData.length - 1) {
         this.itenary++;
-        this.zoom = 15;
+        this.zoom = 10;
         this.positioning(this.itenary);
       }
     },
@@ -154,9 +248,38 @@ export default {
     },
     startMapDetail() {
       this.selectMarkerDetail(this.pathData[0]);
-      this.zoom = 15;
+      this.zoom = 10;
       this.centerDetail.lat = this.selected?.position?.lat;
       this.centerDetail.lng = this.selected?.position?.lng;
+    },
+
+    iconMap(type, group) {
+      let icon = this.iconPoi;
+      switch (type) {
+        case 6:
+          icon = this.iconPoi;
+          break;
+        case 5:
+          icon = this.iconExp;
+          break;
+        case 3:
+          switch (group) {
+            case 0:
+              icon = this.iconAccomm;
+              break;
+            case 1:
+              icon = this.iconActiv;
+              break;
+            case 2:
+              icon = this.iconRestaurant;
+              break;
+            case 3:
+              icon = this.iconShop;
+              break;
+          }
+      }
+
+      return icon;
     },
   },
   mounted() {
@@ -205,6 +328,13 @@ export default {
     }
   }
 }
+.detailActivity {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid lightgray;
+  margin-bottom: 3rem;
+}
+
 .popupInfo {
   position: absolute;
   top: 0.5rem;

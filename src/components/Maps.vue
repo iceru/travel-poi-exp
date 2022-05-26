@@ -1,8 +1,14 @@
 <script setup>
 import { computed } from "@vue/runtime-core";
 import { useMapStore } from "../stores/map";
+import { useAppStore } from "../stores/app";
 
 const storeMap = useMapStore();
+const storeApp = useAppStore();
+
+const markers = computed(() => {
+  return storeApp.items.filter((el) => el.data.HasGeocodes);
+});
 
 const center = computed(() => {
   return storeMap.center;
@@ -54,7 +60,7 @@ const center = computed(() => {
         <GMapInfoWindow :opened="showByIndex === index">
           <div class="popupImage" v-if="m.data.Type !== 5">
             <img
-              :src="
+              v-lazy="
                 m.data.Images && m.data.Images.length > 0
                   ? m.data.Images[0].Url
                   : '/images/no_image.png'
@@ -89,24 +95,6 @@ export default {
       pathData: [],
     };
   },
-  watch: {
-    poi(newPoi) {
-      if (newPoi.length > 0) {
-        this.getMarkers();
-      }
-    },
-    exp(newExp) {
-      if (newExp.length > 0) {
-        this.getExpMarkers();
-      }
-    },
-
-    services(newServices) {
-      if (newServices.length > 0) {
-        this.getServiceMarkers();
-      }
-    },
-  },
   methods: {
     iconMap(type, group) {
       let icon = this.iconPoi;
@@ -135,46 +123,6 @@ export default {
       }
 
       return icon;
-    },
-    getMarkers() {
-      this.poi.map((item) => {
-        if (item.HasGeocodes) {
-          this.markers.push({
-            data: item,
-            position: {
-              lat: item.Geocodes[0].Geocode.Latitude,
-              lng: item.Geocodes[0].Geocode.Longitude,
-            },
-          });
-        }
-      });
-    },
-    getExpMarkers() {
-      this.exp.map((item) => {
-        if (item.HasGeocodes) {
-          this.markers.push({
-            data: item,
-            position: {
-              lat: item.Geocodes[0].Geocode.Latitude,
-              lng: item.Geocodes[0].Geocode.Longitude,
-            },
-          });
-        }
-      });
-    },
-
-    getServiceMarkers() {
-      this.services.map((item) => {
-        if (item.HasGeocodes) {
-          this.markers.push({
-            data: item,
-            position: {
-              lat: item.Geocodes[0].Geocode.Latitude,
-              lng: item.Geocodes[0].Geocode.Longitude,
-            },
-          });
-        }
-      });
     },
 
     selectMarker(item) {

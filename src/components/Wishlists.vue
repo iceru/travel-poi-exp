@@ -10,29 +10,11 @@ const isOpen = computed(() => {
 </script>
 
 <template>
-  <div class="container-filter" v-if="isOpen">
+  <div class="container-wishlist" v-if="isOpen">
     <div class="icon-close" @click="storeFilter.closeFilter()">
       <BIconXLg />
     </div>
-    <div class="title">Filter</div>
-    <div class="forms">
-      <div class="form-groups w-100">
-        <label class="form-label" for="">Keywords</label>
-        <input class="form-input" type="text" />
-      </div>
-      <div class="form-groups">
-        <label class="form-label" for="">Date</label>
-        <input class="form-input" type="date" />
-      </div>
-      <div class="form-groups">
-        <label class="form-label" for="">Number of Person</label>
-        <input class="form-input" v-model="pax" type="number" />
-      </div>
-      <div class="form-groups">
-        <label class="form-label" for="">Duration of Stay</label>
-        <input class="form-input" v-model="duration" type="number" />
-      </div>
-    </div>
+    <div class="title">Wishlist</div>
   </div>
 </template>
 
@@ -51,14 +33,14 @@ export default {
 </script>
 
 <style lang="scss">
-.container-filter {
+.container-wishlist {
   background: white;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   height: 75%;
-  width: 30%;
+  width: 50%;
   border-radius: 1rem;
   padding: 1rem 1.5rem;
   box-shadow: 0 0 32px rgba($color: #000000, $alpha: 0.4);
