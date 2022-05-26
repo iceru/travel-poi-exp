@@ -18,11 +18,11 @@ const isOpen = computed(() => {
     <div class="forms">
       <div class="form-groups w-100">
         <label class="form-label" for="">Keywords</label>
-        <input class="form-input" type="text" />
+        <input class="form-input" v-model="keywords" type="text" />
       </div>
       <div class="form-groups">
         <label class="form-label" for="">Date</label>
-        <input class="form-input" type="date" />
+        <input class="form-input" v-model="date" type="date" />
       </div>
       <div class="form-groups">
         <label class="form-label" for="">Number of Person</label>

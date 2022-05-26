@@ -26,9 +26,7 @@ export const useAppStore = defineStore('app', {
         addToWishlists(item) {
             debugger;
             if (this.wishlists.length > 0) {
-                this.wishlists.map((wish) => {
-                    if (wish.Id !== item.Id) this.wishlists.push(item);
-                })
+                if (this.wishlists.filter(e => e.Id === item.Id).length == 0) this.wishlists.push(item)
             } else {
                 this.wishlists.push(item);
             }
