@@ -4,6 +4,7 @@ export const useAppStore = defineStore('app', {
     state: () => ({
         items: [],
         wishlists: [],
+        wishlistsModal: false,
     }),
     getters: {
         getItems(state) {
@@ -23,7 +24,20 @@ export const useAppStore = defineStore('app', {
             });
         },
         addToWishlists(item) {
-            this.wishlists.push(item);
+            debugger;
+            if (this.wishlists.length > 0) {
+                this.wishlists.map((wish) => {
+                    if (wish.Id !== item.Id) this.wishlists.push(item);
+                })
+            } else {
+                this.wishlists.push(item);
+            }
+        },
+        toggleWishlists() {
+            this.wishlistsModal = !this.wishlistsModal;
+        },
+        closeWishlists() {
+            this.wishlistsModal = false
         }
     }
 })

@@ -7,6 +7,7 @@ import { computed, onMounted } from "vue";
 import { usePoiStore } from "../stores/poi";
 import { useExperiencesStore } from "../stores/experiences";
 import { useServicesStore } from "../stores/services";
+import Wishlists from "../components/Wishlists.vue";
 
 const storePoi = usePoiStore();
 const storeExp = useExperiencesStore();
@@ -36,6 +37,7 @@ onMounted(() => {
     <GoogleMaps :services="services" :poi="poi" :exp="exp" />
     <ListItems :services="services" :poi="poi" :exp="exp" />
     <Filter />
+    <Wishlists />
   </main>
 </template>
 

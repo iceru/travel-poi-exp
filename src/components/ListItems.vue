@@ -32,6 +32,10 @@ const sidebar = computed(() => {
   >
     <BIconLayoutSidebarInset />
   </div>
+  <div class="iconWishlists" @click="storeApp.toggleWishlists()">
+    Wishlists
+    <BIconHeartFill />
+  </div>
   <div class="container" :class="sidebar ? 'active' : ''">
     <div v-if="Object.keys(selected).length === 0">
       <div class="actions">
@@ -40,13 +44,8 @@ const sidebar = computed(() => {
         </div>
       </div>
       <div class="listItems">
-        <div
-          v-for="item in paginatedItems"
-          :key="item.data.Id"
-          @click="storeMap.selectMarker(item)"
-          class="item"
-        >
-          <div class="itemImage">
+        <div v-for="item in paginatedItems" :key="item.data.Id" class="item">
+          <div class="itemImage" @click="storeMap.selectMarker(item)">
             <img
               v-lazy="
                 item.data.Images
@@ -76,10 +75,15 @@ const sidebar = computed(() => {
               )
             }}
           </div>
-          <div class="itemTitle">{{ item.data.Name }}</div>
+          <div class="itemTitle" @click="storeMap.selectMarker(item)">
+            {{ item.data.Name }}
+          </div>
           <div class="itemDesc">{{ item.data.LongDescription }}</div>
           <div class="itemPrice" v-if="item.data.Type === 3">
             Starts From £{{ item.data.Availability?.Calendar?.LowestRate }}
+          </div>
+          <div class="wishlist" @click="storeApp.addToWishlists(item.data)">
+            Add to Wishlists
           </div>
         </div>
       </div>
@@ -178,6 +182,30 @@ export default {
   }
 }
 
+.iconWishlists {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  background-color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 15px 4px rgba($color: #000000, $alpha: 0.2);
+  font-size: 1.25rem;
+  &.active {
+    transition: all 0.2s ease;
+    left: 34%;
+  }
+
+  svg {
+    margin-left: 0.5rem;
+    margin-bottom: -3px;
+  }
+}
+
 .loadMore {
   width: calc(100% - 1rem);
   text-align: center;
@@ -239,6 +267,7 @@ export default {
       cursor: pointer;
       position: relative;
       .itemImage {
+        margin-bottom: 0.5rem;
         img {
           width: 100%;
           height: 150px;

@@ -1,20 +1,29 @@
 <script setup>
 import { computed } from "@vue/runtime-core";
-import { useFilterStore } from "../stores/filter";
+import { useAppStore } from "../stores/app";
 
-const storeFilter = useFilterStore();
+const storeApp = useAppStore();
 
-const isOpen = computed(() => {
-  return storeFilter.isOpen;
+const wishlistsModal = computed(() => {
+  return storeApp.wishlistsModal;
+});
+
+const wishlists = computed(() => {
+  return storeApp.wishlists;
 });
 </script>
 
 <template>
-  <div class="container-wishlist" v-if="isOpen">
-    <div class="icon-close" @click="storeFilter.closeFilter()">
+  <div class="container-wishlist" v-if="wishlistsModal">
+    <div class="icon-close" @click="storeApp.closeWishlists()">
       <BIconXLg />
     </div>
     <div class="title">Wishlist</div>
+    <div class="wishlist-items">
+      <div class="item" v-for="item in wishlists">
+        <div class="title">{{ item.Name }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
