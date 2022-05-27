@@ -124,9 +124,11 @@ export default {
   },
   computed: {
     totalItems() {
+      console.log(Object.keys(this.items).length);
       return Object.keys(this.items).length;
     },
     paginatedItems() {
+      console.log(this.items);
       return this.items.slice(0, this.currentPage * this.maxPerPage);
     },
   },
