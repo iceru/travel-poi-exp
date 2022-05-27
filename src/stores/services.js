@@ -21,7 +21,7 @@ export const useServicesStore = defineStore('services', {
                         this.services = response.data.Entities;
                         const app = useAppStore();
                         app.items = app.items.filter(el => el.data.Type !== 3);
-
+                        app.itemsLoading = false;
                         app.mergeItems(response.data.Entities);
                     });
             }

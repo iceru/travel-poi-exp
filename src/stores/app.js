@@ -5,6 +5,7 @@ export const useAppStore = defineStore('app', {
         items: [],
         wishlists: [],
         wishlistsModal: false,
+        itemsLoading: false,
     }),
     getters: {
         getItems(state) {

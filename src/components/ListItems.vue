@@ -13,6 +13,10 @@ const selected = computed(() => {
   return storeMap.selectedItem;
 });
 
+const itemsLoading = computed(() => {
+  return storeApp.itemsLoading;
+});
+
 const items = computed(() => {
   return storeApp.items?.sort((a, b) =>
     a.data?.Name?.localeCompare(b.data?.Name)
@@ -38,6 +42,9 @@ const sidebar = computed(() => {
   </div>
   <div class="container" :class="sidebar ? 'active' : ''">
     <div v-if="Object.keys(selected).length === 0">
+      <div class="itemsLoad" v-if="itemsLoading">
+        <img src="/images/loading.gif" alt="" />
+      </div>
       <div class="actions">
         <div @click="storeFilter.openFilter()" class="filterButton">
           <BIconFilter /> Filter
@@ -127,8 +134,7 @@ export default {
       return Object.keys(this.items).length;
     },
     paginatedItems() {
-      console.log(this.items);
-      return this.items?.slice(0, this.currentPage * this.maxPerPage);
+      return this.items.slice(0, this.currentPage * this.maxPerPage);
     },
   },
   methods: {
@@ -186,11 +192,29 @@ export default {
   box-shadow: 0 0 15px 4px rgba($color: #000000, $alpha: 0.2);
   &.active {
     transition: all 0.2s ease;
-    left: 34%;
+    left: 35%;
   }
 
   svg {
     font-size: 1.25rem;
+  }
+}
+
+.itemsLoad {
+  position: absolute;
+  z-index: 3;
+  background-color: white;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 40px;
+    margin-top: -2rem;
   }
 }
 

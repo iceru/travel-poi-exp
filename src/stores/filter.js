@@ -59,6 +59,7 @@ export const useFilterStore = defineStore('filter', {
             const storeServices = useServicesStore();
 
             storeServices.fetchServices(url.bodyServices);
+            this.closeFilter();
         }
     }
 })

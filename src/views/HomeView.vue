@@ -27,8 +27,6 @@ const services = computed(() => {
 
 onMounted(() => {
   storePoi.fetchPoi();
-  storeExp.fetchExperiences();
-  storeServices.fetchServices();
 });
 </script>
 

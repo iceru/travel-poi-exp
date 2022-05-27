@@ -2,6 +2,7 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import url from "@/helpers/endpoints.js";
 import { useAppStore } from "./app";
+import { useServicesStore } from "./services";
 
 export const useExperiencesStore = defineStore('experiences', {
     state: () => ({
@@ -20,6 +21,9 @@ export const useExperiencesStore = defineStore('experiences', {
                     .then((response) => {
                         this.experiences = response.data.Entities;
                         const app = useAppStore();
+                        const services = useServicesStore();
+
+                        services.fetchServices();
                         app.mergeItems(response.data.Entities);
                     });
             }
