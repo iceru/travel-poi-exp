@@ -173,6 +173,13 @@ const markers = computed(() => {
       <div class="desc">
         {{ selectedActivity?.data?.LongDescription }}
       </div>
+      <div
+        class="wishlist"
+        v-if="selectedActivity?.Type !== 5"
+        @click="storeApp.addToWishlists(selectedActivity)"
+      >
+        Add to Wishlists
+      </div>
     </div>
   </div>
 </template>

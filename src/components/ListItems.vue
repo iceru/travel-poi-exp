@@ -55,6 +55,21 @@ const sidebar = computed(() => {
               alt=""
             />
           </div>
+
+          <div
+            class="wishlistBtn"
+            @click="storeApp.addToWishlists(item.data)"
+            v-if="!item.data.Wishlist"
+          >
+            <BIconHeart />
+          </div>
+          <div
+            class="wishlistBtn"
+            @click="storeApp.removeWishlist(item.data)"
+            v-if="item.data.Wishlist"
+          >
+            <BIconHeartFill />
+          </div>
           <div
             class="itemBadge"
             :class="
@@ -81,9 +96,6 @@ const sidebar = computed(() => {
           <div class="itemDesc">{{ item.data.LongDescription }}</div>
           <div class="itemPrice" v-if="item.data.Type === 3">
             Starts From £{{ item.data.Availability?.Calendar?.LowestRate }}
-          </div>
-          <div class="wishlist" @click="storeApp.addToWishlists(item.data)">
-            Add to Wishlists
           </div>
         </div>
       </div>
@@ -178,7 +190,7 @@ export default {
   }
 
   svg {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 }
 
@@ -194,7 +206,7 @@ export default {
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 0 15px 4px rgba($color: #000000, $alpha: 0.2);
-  font-size: 1.25rem;
+  font-size: 1rem;
   &.active {
     transition: all 0.2s ease;
     left: 34%;
@@ -273,6 +285,24 @@ export default {
           height: 150px;
           object-fit: cover;
           border-radius: 8px;
+        }
+      }
+
+      .wishlistBtn {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.5rem;
+        background-color: rgba($color: #000000, $alpha: 0.75);
+        color: white;
+        width: 23px;
+        height: 23px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+
+        svg {
+          margin-bottom: -1px;
         }
       }
 

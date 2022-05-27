@@ -13,13 +13,16 @@ export const useServicesStore = defineStore('services', {
         }
     },
     actions: {
-        async fetchServices() {
+        async fetchServices(request) {
+            console.log(url.bodyServices);
             try {
                 await axios
-                    .post(url.endpoints.search, url.bodyServices)
+                    .post(url.endpoints.search, request ? request : url.bodyServices)
                     .then((response) => {
                         this.services = response.data.Entities;
                         const app = useAppStore();
+                        app.items = app.items.filter(el => el.data.Type !== 3);
+
                         app.mergeItems(response.data.Entities);
                     });
             }

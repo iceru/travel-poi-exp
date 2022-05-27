@@ -21,7 +21,19 @@ const wishlists = computed(() => {
     <div class="title">Wishlist</div>
     <div class="wishlist-items">
       <div class="item" v-for="item in wishlists">
-        <div class="title">{{ item.Name }}</div>
+        <div class="wish-img">
+          <img
+            v-lazy="item.Images ? item.Images[0].Url : '/images/no_image.png'"
+            alt=""
+          />
+        </div>
+        <div>
+          <h5 class="wish-title">{{ item.Name }}</h5>
+          <p class="wish-desc">{{ item.LongDescription }}</p>
+        </div>
+        <div class="icon-delete" @click="storeApp.removeWishlist(item)">
+          <div><BIconTrash /></div>
+        </div>
       </div>
     </div>
   </div>
@@ -60,37 +72,55 @@ export default {
   }
 
   .title {
-    font-weight: bold;
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: 1rem;
+    font-weight: bold;
   }
 
-  .forms {
+  .item {
     display: flex;
-    flex-wrap: wrap;
-    .form-groups {
-      margin-bottom: 1rem;
-      width: 50%;
+    align-items: center;
 
-      &.w-100 {
-        width: 100%;
-
-        .form-input {
-          width: calc(100% - 2rem);
-        }
+    .wish-img {
+      margin-right: 1rem;
+      img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
       }
     }
-    .form-label {
-      display: block;
-      margin-bottom: 0.5rem;
+
+    .wish-title {
+      margin-bottom: 4px;
+      margin-top: 0;
     }
 
-    .form-input {
-      border-radius: 0.25rem;
-      padding: 0.5rem 0.75rem;
-      border: 1px solid gray;
-      outline: none;
-      width: calc(95% - 2rem);
+    .wish-desc {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .icon-delete {
+      font-size: 18px;
+      background-color: red;
+      color: white;
+      padding: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      margin-left: 1rem;
+      cursor: pointer;
+
+      svg {
+        margin-bottom: -3px;
+      }
     }
   }
 }

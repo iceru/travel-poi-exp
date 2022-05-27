@@ -65,7 +65,11 @@ const selected = computed(() => {
         @click="more = !more"
         >{{ textMore }}</span
       >
-      <div class="wishlist" @click="storeApp.addToWishlists(selected)">
+      <div
+        class="wishlist"
+        v-if="selected?.Type !== 5"
+        @click="storeApp.addToWishlists(selected)"
+      >
         Add to Wishlists
       </div>
       <div class="check-price" v-if="selected?.Type === 3">

@@ -18,21 +18,38 @@ const isOpen = computed(() => {
     <div class="forms">
       <div class="form-groups w-100">
         <label class="form-label" for="">Keywords</label>
-        <input class="form-input" v-model="keywords" type="text" />
+        <input class="form-input" v-model="formValues.keywords" type="text" />
       </div>
       <div class="form-groups">
         <label class="form-label" for="">Date</label>
-        <input class="form-input" v-model="date" type="date" />
+        <input class="form-input" v-model="formValues.date" type="date" />
       </div>
       <div class="form-groups">
         <label class="form-label" for="">Number of Person</label>
-        <input class="form-input" v-model="pax" type="number" />
+        <input class="form-input" v-model="formValues.pax" type="number" />
       </div>
       <div class="form-groups">
         <label class="form-label" for="">Duration of Stay</label>
-        <input class="form-input" v-model="duration" type="number" />
+        <input class="form-input" v-model="formValues.duration" type="number" />
+      </div>
+      <div class="form-groups w-100">
+        <label class="form-label" for="">Price Range</label>
+        <input
+          class="form-input w-50"
+          v-model="formValues.minRange"
+          type="number"
+        />
+        -
+        <input
+          class="form-input w-50"
+          v-model="formValues.maxRange"
+          type="number"
+        />
       </div>
     </div>
+    <button class="submit" v-on:click="storeFilter.setFilter(formValues)">
+      Submit
+    </button>
   </div>
 </template>
 
@@ -41,10 +58,14 @@ export default {
   name: "Filter",
   data() {
     return {
-      keywords: "",
-      date: new Date(),
-      pax: 1,
-      duration: 1,
+      formValues: {
+        keywords: "",
+        date: new Date(),
+        pax: 1,
+        duration: 1,
+        minRange: 0,
+        maxRange: 9999,
+      },
     };
   },
 };
@@ -92,6 +113,7 @@ export default {
     .form-label {
       display: block;
       margin-bottom: 0.5rem;
+      font-size: 13px;
     }
 
     .form-input {
@@ -100,6 +122,9 @@ export default {
       border: 1px solid gray;
       outline: none;
       width: calc(95% - 2rem);
+      &.w-50 {
+        width: calc(48% - 2rem) !important;
+      }
     }
   }
 }

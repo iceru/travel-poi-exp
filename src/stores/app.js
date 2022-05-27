@@ -24,11 +24,24 @@ export const useAppStore = defineStore('app', {
             });
         },
         addToWishlists(item) {
-            debugger;
             if (this.wishlists.length > 0) {
                 if (this.wishlists.filter(e => e.Id === item.Id).length == 0) this.wishlists.push(item)
             } else {
                 this.wishlists.push(item);
+            }
+            const app = useAppStore();
+            const selectedItem = app.items.find((el) => el.data.Id === item.Id);
+            if(selectedItem) {
+                selectedItem.data.Wishlist = true;
+            }
+            console.log(selectedItem);
+        },
+        removeWishlist(item) {
+            this.wishlists = this.wishlists.filter(e => e.Id !== item.Id);
+            const app = useAppStore();
+            const selectedItem = app.items.find((el) => el.data.Id === item.Id);
+            if(selectedItem) {
+                selectedItem.data.Wishlist = false;
             }
         },
         toggleWishlists() {
