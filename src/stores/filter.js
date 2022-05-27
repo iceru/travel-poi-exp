@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import url from "@/helpers/endpoints.js";
 import { useServicesStore } from "./services";
+import { useAppStore } from "./app";
 
 export const useFilterStore = defineStore('filter', {
     state: () => ({
@@ -57,8 +58,10 @@ export const useFilterStore = defineStore('filter', {
             }
 
             const storeServices = useServicesStore();
+            const app = useAppStore();
 
             storeServices.fetchServices(url.bodyServices);
+            app.itemsLoading = true;
             this.closeFilter();
         }
     }
