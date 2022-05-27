@@ -115,7 +115,6 @@ const sidebar = computed(() => {
 <script>
 export default {
   name: "ListItems",
-  props: ["services", "poi", "exp"],
   data() {
     return {
       currentPage: 1,
@@ -128,7 +127,7 @@ export default {
       return Object.keys(this.items).length;
     },
     paginatedItems() {
-      return this.items?.slice(0, this.currentPage * this.maxPerPage);
+      return this.items.slice(0, this.currentPage * this.maxPerPage);
     },
   },
   methods: {

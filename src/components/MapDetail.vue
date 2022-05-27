@@ -15,7 +15,9 @@ const pathData = computed(() => {
 });
 
 const markers = computed(() => {
-  const filterdMarkers = storeApp.items.filter((el) => el.data.Type !== 5);
+  let filterdMarkers = storeApp.items.filter(
+    (el) => el.data.Type !== 5 && el.data.HasGeocodes
+  );
   return filterdMarkers;
 });
 </script>
