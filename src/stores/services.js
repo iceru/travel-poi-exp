@@ -14,7 +14,6 @@ export const useServicesStore = defineStore('services', {
     },
     actions: {
         async fetchServices(request) {
-            console.log(url.bodyServices);
             try {
                 await axios
                     .post(url.endpoints.search, request ? request : url.bodyServices)

@@ -22,7 +22,6 @@ export const useAppStore = defineStore('app', {
                     },
                 });
             });
-            console.log(this.items);
         },
         addToWishlists(item) {
             if (this.wishlists.length > 0) {
@@ -35,7 +34,6 @@ export const useAppStore = defineStore('app', {
             if(selectedItem) {
                 selectedItem.data.Wishlist = true;
             }
-            console.log(selectedItem);
         },
         removeWishlist(item) {
             this.wishlists = this.wishlists.filter(e => e.Id !== item.Id);

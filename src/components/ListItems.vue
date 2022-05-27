@@ -44,7 +44,7 @@ const sidebar = computed(() => {
         </div>
       </div>
       <div class="listItems">
-        <div v-for="item in paginatedItems" :key="item.data.Id" class="item">
+        <div v-for="item in items" :key="item.data.Id" class="item">
           <div class="itemImage" @click="storeMap.selectMarker(item)">
             <img
               v-lazy="
@@ -124,12 +124,11 @@ export default {
   },
   computed: {
     totalItems() {
-      console.log(Object.keys(this.items).length);
       return Object.keys(this.items).length;
     },
     paginatedItems() {
       console.log(this.items);
-      return this.items.slice(0, this.currentPage * this.maxPerPage);
+      return this.items?.slice(0, this.currentPage * this.maxPerPage);
     },
   },
   methods: {

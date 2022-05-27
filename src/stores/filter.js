@@ -56,8 +56,6 @@ export const useFilterStore = defineStore('filter', {
                 delete url.bodyServices.Filter.Names;
             }
 
-            console.log(url.bodyServices);
-
             const storeServices = useServicesStore();
 
             storeServices.fetchServices(url.bodyServices);
