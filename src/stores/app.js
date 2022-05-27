@@ -22,6 +22,7 @@ export const useAppStore = defineStore('app', {
                     },
                 });
             });
+            console.log(items);
         },
         addToWishlists(item) {
             if (this.wishlists.length > 0) {
