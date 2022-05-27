@@ -128,7 +128,7 @@ export default {
       return Object.keys(this.items).length;
     },
     paginatedItems() {
-      return this.items.slice(0, this.currentPage * this.maxPerPage);
+      return this.items?.slice(0, this.currentPage * this.maxPerPage);
     },
   },
   methods: {
