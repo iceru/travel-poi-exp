@@ -11,7 +11,7 @@ const path = computed(() => {
 });
 
 const pathData = computed(() => {
-  console.log(pathData);
+  console.log(storeMap.pathData);
   return storeMap.pathData;
 });
 
@@ -52,7 +52,7 @@ const markers = computed(() => {
           url: iconMap(
             m.data.Type,
             m.data.IndustryCategoryGroups?.length > 0 &&
-              m.data.IndustryCategoryGroups[0]
+            m.data.IndustryCategoryGroups[0]
           ),
           scaledSize: { width: 35, height: 45 },
         }" @click="selectMarkerDetail(m)" @mouseover="showByIndex = index" @mouseout="showByIndex = null">
@@ -115,7 +115,7 @@ const markers = computed(() => {
       ">
         <img v-lazy="
           selectedActivity?.data?.Images &&
-          selectedActivity?.data?.Images.length === 1
+            selectedActivity?.data?.Images.length === 1
             ? selectedActivity?.data?.Images[0].Url
             : '/images/no_image.png'
         " alt="" />
@@ -215,6 +215,7 @@ export default {
       this.positioning(this.itenary);
     },
     startMapDetail() {
+      debugger;
       this.selectMarkerDetail(this.pathData[0]);
       this.zoom = 10;
       this.centerDetail.lat = this.selected?.position?.lat;
@@ -251,6 +252,7 @@ export default {
     },
   },
   mounted() {
+    console.log(this.pathData);
     if (this.pathData) {
       this.startMapDetail();
     }
