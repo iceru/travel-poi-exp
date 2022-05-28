@@ -23,6 +23,7 @@ export const useServicesStore = defineStore('services', {
                         app.items = app.items.filter(el => el.data.Type !== 3);
                         app.itemsLoading = false;
                         app.mergeItems(response.data.Entities);
+                        app.sortItems();
                     });
             }
             catch (error) {

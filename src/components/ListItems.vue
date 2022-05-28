@@ -18,7 +18,10 @@ const itemsLoading = computed(() => {
 });
 
 const items = computed(() => {
-  console.log(storeApp.sortedItems);
+  return storeApp.items;
+});
+
+const sortedItems = computed(() => {
   return storeApp.sortedItems;
 });
 
@@ -32,7 +35,9 @@ const sidebar = computed(() => {
   return storeMap.sidebarOpen;
 });
 
-onMounted(() => { storeApp.sortItems() });
+const currentPage = computed(() => { return storeApp.currentPage })
+const maxPerPage = computed(() => { return storeApp.maxPerPage })
+
 </script>
 
 <template>
@@ -88,7 +93,7 @@ onMounted(() => { storeApp.sortItems() });
         </div>
       </div>
       <div class="listItems">
-        <div v-for="item in paginatedItems" :key="item.data.Id" class="item">
+        <div v-for="item in sortedItems" :key="item.data.Id" class="item">
           <div class="itemImage" @click="storeMap.selectMarker(item)">
             <img v-lazy="
               item.data.Images
@@ -129,7 +134,7 @@ onMounted(() => { storeApp.sortItems() });
           </div>
         </div>
       </div>
-      <div class="loadMore" v-on:click="loadMore" v-if="currentPage * maxPerPage < items.length">
+      <div class="loadMore" v-on:click="storeApp.loadMore()" v-if="currentPage * maxPerPage < storeApp.items.length">
         Load More
       </div>
     </div>
@@ -139,28 +144,14 @@ onMounted(() => { storeApp.sortItems() });
 </template>
 
 <script>
-import { mapWritableState, mapState } from 'pinia'
 import { useAppStore } from "../stores/app";
 
 export default {
   name: "ListItems",
   data() {
     return {
-      currentPage: 1,
-      maxPerPage: 10,
       showLoadMore: true,
     };
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['sortedItems']),
-
-    totalItems() {
-      return Object.keys(this.sortedItems).length;
-    },
-    paginatedItems() {
-      return this.sortedItems?.slice(0, this.currentPage * this.maxPerPage);;
-    },
-
   },
   methods: {
     typeName(type, group, typeOutput) {
@@ -194,9 +185,6 @@ export default {
           : badgeName;
 
       return badgeName;
-    },
-    loadMore() {
-      this.currentPage += 1;
     },
   },
 };

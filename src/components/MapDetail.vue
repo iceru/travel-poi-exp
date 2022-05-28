@@ -255,7 +255,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.pathData);
     if (this.pathData) {
       this.startMapDetail();
     }

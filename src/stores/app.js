@@ -6,11 +6,16 @@ export const useAppStore = defineStore('app', {
         wishlists: [],
         wishlistsModal: false,
         itemsLoading: false,
+        currentPage: 1,
+        maxPerPage: 10,
         sort: 'Name-Ascending',
     }),
     getters: {
         getItems(state) {
             return state.items
+        },
+        totalItems(state) {
+            return state.sortedItems.length;
         },
     },
     actions: {
@@ -52,7 +57,6 @@ export const useAppStore = defineStore('app', {
             this.wishlistsModal = false
         },
         sortItems() {
-            debugger;
             const listItems = this.items.filter((el) => el.data.Type !== 5);
             let sorted = listItems;
             if (this.sort == "Name-Ascending") {
@@ -81,7 +85,12 @@ export const useAppStore = defineStore('app', {
                     )
                 );
             }
-            this.sortedItems = sorted;
-        }
+            this.sortedItems = sorted.slice(0, this.currentPage * this.maxPerPage);
+        },
+        
+        loadMore() {
+            this.currentPage += 1;
+            this.sortItems();
+        },
     }
 })
