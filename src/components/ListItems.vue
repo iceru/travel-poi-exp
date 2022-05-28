@@ -165,13 +165,24 @@ const sidebar = computed(() => {
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useAppStore } from "../stores/app";
+
 export default {
   name: "ListItems",
-  setup() {
-    const storeApp = useAppStore();
-    const items = computed(() => {
-      const listItems = storeApp.items.filter((el) => el.data.Type !== 5);
-      let sorted = listItems;
+  data() {
+    return {
+      currentPage: 1,
+      maxPerPage: 10,
+      items: this.items,
+      showLoadMore: true,
+    };
+  },
+  computed: {
+    ...mapState(useAppStore, ['items']),
+    itemsComputed() {
+      let sorted = this.items.filter((el) => el.data.Type !== 5);
+
       if (storeApp.sort == "Name-Ascending") {
         sorted = listItems.sort((a, b) =>
           a.data?.Name?.localeCompare(b.data?.Name)
@@ -199,25 +210,14 @@ export default {
         );
       }
       return sorted;
-    });
-
-    return { items }
-  },
-  data() {
-    return {
-      currentPage: 1,
-      maxPerPage: 10,
-      items: this.items,
-      showLoadMore: true,
-    };
-  },
-  computed: {
+    },
     totalItems() {
-      return Object.keys(this.items).length;
+      return Object.keys(this.itemsComputed).length;
     },
     paginatedItems() {
-      return this.items?.slice(0, this.currentPage * this.maxPerPage);;
+      return this.itemsComputed?.slice(0, this.currentPage * this.maxPerPage);;
     },
+
   },
   methods: {
     typeName(type, group, typeOutput) {
