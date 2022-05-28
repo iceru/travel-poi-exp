@@ -200,11 +200,14 @@ export default {
       }
       return sorted;
     });
+
+    return { items }
   },
   data() {
     return {
       currentPage: 1,
       maxPerPage: 10,
+      items: this.items,
       showLoadMore: true,
     };
   },

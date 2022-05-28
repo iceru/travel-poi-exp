@@ -150,7 +150,10 @@ export default {
   name: "MapDetail",
   setup() {
     const storeMap = useMapStore();
-    return { storeMap };
+    const pathDataAct = computed(() => {
+      return storeMap.pathData;
+    });
+    return { pathDataAct };
   },
   data() {
     return {
@@ -158,6 +161,7 @@ export default {
       selectedActivity: null,
       zoom: 8,
       itenary: 0,
+      pathData: this.pathDataAct,
       showByIndex: null,
       centerDetail: { lat: 51.5072, lng: 0.1276 },
       lineSymbol: {
@@ -176,7 +180,7 @@ export default {
   },
   watch: {
     pathDataAct: function (newPathdata, oldPathData) {
-      if (this.storeMap.pathData.length > 0) {
+      if (this.pathData.length > 0) {
         this.startMapDetail();
       }
     },
@@ -190,13 +194,13 @@ export default {
     },
 
     positioning(itenary) {
-      this.selected = this.storeMap.pathData[itenary];
+      this.selected = this.pathData[itenary];
       this.centerDetail.lat = this.selected.position.lat;
       this.centerDetail.lng = this.selected.position.lng;
     },
 
     nextMarker() {
-      if (this.itenary < this.storeMap.pathData.length - 1) {
+      if (this.itenary < this.pathData.length - 1) {
         this.itenary++;
         this.zoom = 10;
         this.positioning(this.itenary);
@@ -215,11 +219,11 @@ export default {
     },
 
     goToFinish() {
-      this.itenary = this.storeMap.pathData.length - 1;
+      this.itenary = this.pathData.length - 1;
       this.positioning(this.itenary);
     },
     startMapDetail() {
-      this.selectMarkerDetail(this.storeMap.pathData[0]);
+      this.selectMarkerDetail(this.pathData[0]);
       this.zoom = 10;
       this.centerDetail.lat = this.selected?.position?.lat;
       this.centerDetail.lng = this.selected?.position?.lng;
@@ -255,8 +259,8 @@ export default {
     },
   },
   mounted() {
-    console.log(this.storeMap.pathData);
-    if (this.storeMap.pathData) {
+    console.log(this.pathData);
+    if (this.pathData) {
       this.startMapDetail();
     }
   },
