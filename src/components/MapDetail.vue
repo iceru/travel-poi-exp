@@ -145,9 +145,17 @@ const markers = computed(() => {
 
 <script>
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import { useMapStore } from "../stores/map";
 
 export default {
   name: "MapDetail",
+  setup() {
+    const storeMap = useMapStore();
+    const pathData = computed(() => {
+      return storeMap.pathData;
+    });
+    return { pathData };
+  },
   data() {
     return {
       selected: null,
@@ -215,7 +223,7 @@ export default {
       this.positioning(this.itenary);
     },
     startMapDetail() {
-      debugger;
+      console.log(this.pathData);
       this.selectMarkerDetail(this.pathData[0]);
       this.zoom = 10;
       this.centerDetail.lat = this.selected?.position?.lat;

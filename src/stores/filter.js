@@ -68,7 +68,6 @@ export const useFilterStore = defineStore('filter', {
             url.bodyServices.Filter.TagCriteria = {
                 IndustryCategoryGroups: requestCategories,
             };
-            debugger;
 
             if (app.sort) {
                 url.bodyServices.Sorting = [

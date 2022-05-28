@@ -114,7 +114,7 @@ const sidebar = computed(() => {
         </div>
       </div>
       <div class="listItems">
-        <div v-for="item in items" :key="item.data.Id" class="item">
+        <div v-for="item in paginatedItems" :key="item.data.Id" class="item">
           <div class="itemImage" @click="storeMap.selectMarker(item)">
             <img v-lazy="
               item.data.Images
@@ -167,6 +167,40 @@ const sidebar = computed(() => {
 <script>
 export default {
   name: "ListItems",
+  setup() {
+    const storeApp = useAppStore();
+    const items = computed(() => {
+      const listItems = storeApp.items.filter((el) => el.data.Type !== 5);
+      let sorted = listItems;
+      if (storeApp.sort == "Name-Ascending") {
+        sorted = listItems.sort((a, b) =>
+          a.data?.Name?.localeCompare(b.data?.Name)
+        );
+      }
+
+      if (storeApp.sort == "Name-Descending") {
+        sorted = listItems.sort((a, b) =>
+          b.data?.Name?.localeCompare(a.data?.Name)
+        );
+      }
+
+      if (storeApp.sort == "Price-Ascending") {
+        sorted = listItems.sort((a, b) =>
+          a.data?.Availability?.Calendar.LowesRate?.localeCompare(
+            b.data?.Availability?.Calendar?.LowesRate
+          )
+        );
+      }
+      if (storeApp.sort == "Price-Descending") {
+        sorted = listItems.sort((a, b) =>
+          b.data?.Availability?.Calendar.LowesRate?.localeCompare(
+            a.data?.Availability?.Calendar?.LowesRate
+          )
+        );
+      }
+      return sorted;
+    });
+  },
   data() {
     return {
       currentPage: 1,
@@ -179,8 +213,7 @@ export default {
       return Object.keys(this.items).length;
     },
     paginatedItems() {
-      const paginated = this.items?.slice(0, this.currentPage * this.maxPerPage);
-      return paginated;
+      return this.items?.slice(0, this.currentPage * this.maxPerPage);;
     },
   },
   methods: {
