@@ -145,23 +145,16 @@ const markers = computed(() => {
 <script>
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import { useMapStore } from "../stores/map";
+import { mapWritableState } from 'pinia'
 
 export default {
   name: "MapDetail",
-  setup() {
-    const storeMap = useMapStore();
-    const pathDataAct = computed(() => {
-      return storeMap.pathData;
-    });
-    return { pathDataAct };
-  },
   data() {
     return {
       selected: null,
       selectedActivity: null,
       zoom: 8,
       itenary: 0,
-      pathData: this.pathDataAct,
       showByIndex: null,
       centerDetail: { lat: 51.5072, lng: 0.1276 },
       lineSymbol: {
@@ -184,6 +177,9 @@ export default {
         this.startMapDetail();
       }
     },
+  },
+  computed: {
+    ...mapWritableState(useMapStore, ['pathData'])
   },
   methods: {
     selectMarkerDetail(geo) {
