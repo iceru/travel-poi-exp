@@ -4,7 +4,6 @@ import { computed } from "@vue/runtime-core";
 import { useMapStore } from "../stores/map";
 import { useAppStore } from "../stores/app";
 import Detail from "./Detail.vue";
-import { useExperiencesStore } from "../stores/experiences";
 
 const storeFilter = useFilterStore();
 const storeApp = useAppStore();
@@ -63,11 +62,7 @@ const sidebar = computed(() => {
 </script>
 
 <template>
-  <div
-    class="iconOpen"
-    @click="storeMap.toggleSidebar()"
-    :class="sidebar ? 'active' : ''"
-  >
+  <div class="iconOpen" @click="storeMap.toggleSidebar()" :class="sidebar ? 'active' : ''">
     <BIconLayoutSidebarInset />
   </div>
   <div class="iconWishlists" @click="storeApp.toggleWishlists()">
@@ -87,38 +82,27 @@ const sidebar = computed(() => {
       <p class="experiences-title" v-if="experiences.length > 0">Experiences</p>
       <div class="listItems experiences" v-if="experiences.length > 0">
         <div v-for="item in experiences" :key="item.data.Id" class="item">
-          <div
-            class="wishlistBtn"
-            @click="storeApp.addToWishlists(item)"
-            v-if="!item.data.Wishlist"
-          >
+          <div class="wishlistBtn" @click="storeApp.addToWishlists(item)" v-if="!item.data.Wishlist">
             <BIconHeart />
           </div>
-          <div
-            class="wishlistBtn"
-            @click="storeApp.removeWishlist(item)"
-            v-if="item.data.Wishlist"
-          >
+          <div class="wishlistBtn" @click="storeApp.removeWishlist(item)" v-if="item.data.Wishlist">
             <BIconHeartFill />
           </div>
-          <div
-            class="itemBadge"
-            :class="
-              typeName(
-                item.data.Type,
-                item.data.IndustryCategoryGroups?.length > 0 &&
-                  item.data.IndustryCategoryGroups[0],
-                'class'
-              )
-            "
-          >
+          <div class="itemBadge" :class="
+            typeName(
+              item.data.Type,
+              item.data.IndustryCategoryGroups?.length > 0 &&
+              item.data.IndustryCategoryGroups[0],
+              'class'
+            )
+          ">
             {{
-              typeName(
-                item.data.Type,
-                item.data.IndustryCategoryGroups?.length > 0 &&
+                typeName(
+                  item.data.Type,
+                  item.data.IndustryCategoryGroups?.length > 0 &&
                   item.data.IndustryCategoryGroups[0],
-                "text"
-              )
+                  "text"
+                )
             }}
           </div>
           <div class="itemTitle" @click="storeMap.selectMarker(item)">
@@ -132,48 +116,34 @@ const sidebar = computed(() => {
       <div class="listItems">
         <div v-for="item in items" :key="item.data.Id" class="item">
           <div class="itemImage" @click="storeMap.selectMarker(item)">
-            <img
-              v-lazy="
-                item.data.Images
-                  ? item.data.Images[0].Url
-                  : '/images/no_image.png'
-              "
-              alt=""
-            />
+            <img v-lazy="
+              item.data.Images
+                ? item.data.Images[0].Url
+                : '/images/no_image.png'
+            " alt="" />
           </div>
 
-          <div
-            class="wishlistBtn"
-            @click="storeApp.addToWishlists(item.data)"
-            v-if="!item.data.Wishlist"
-          >
+          <div class="wishlistBtn" @click="storeApp.addToWishlists(item.data)" v-if="!item.data.Wishlist">
             <BIconHeart />
           </div>
-          <div
-            class="wishlistBtn"
-            @click="storeApp.removeWishlist(item.data)"
-            v-if="item.data.Wishlist"
-          >
+          <div class="wishlistBtn" @click="storeApp.removeWishlist(item.data)" v-if="item.data.Wishlist">
             <BIconHeartFill />
           </div>
-          <div
-            class="itemBadge"
-            :class="
-              typeName(
-                item.data.Type,
-                item.data.IndustryCategoryGroups?.length > 0 &&
-                  item.data.IndustryCategoryGroups[0],
-                'class'
-              )
-            "
-          >
+          <div class="itemBadge" :class="
+            typeName(
+              item.data.Type,
+              item.data.IndustryCategoryGroups?.length > 0 &&
+              item.data.IndustryCategoryGroups[0],
+              'class'
+            )
+          ">
             {{
-              typeName(
-                item.data.Type,
-                item.data.IndustryCategoryGroups?.length > 0 &&
+                typeName(
+                  item.data.Type,
+                  item.data.IndustryCategoryGroups?.length > 0 &&
                   item.data.IndustryCategoryGroups[0],
-                "text"
-              )
+                  "text"
+                )
             }}
           </div>
           <div class="itemTitle" @click="storeMap.selectMarker(item)">
@@ -185,11 +155,7 @@ const sidebar = computed(() => {
           </div>
         </div>
       </div>
-      <div
-        class="loadMore"
-        v-on:click="loadMore"
-        v-if="currentPage * maxPerPage < items.length"
-      >
+      <div class="loadMore" v-on:click="loadMore" v-if="currentPage * maxPerPage < items.length">
         Load More
       </div>
     </div>
@@ -213,7 +179,8 @@ export default {
       return Object.keys(this.items).length;
     },
     paginatedItems() {
-      return this.items.slice(0, this.currentPage * this.maxPerPage);
+      const paginated = this.items?.slice(0, this.currentPage * this.maxPerPage);
+      return paginated;
     },
   },
   methods: {
@@ -270,6 +237,7 @@ export default {
   transition: all 0.2s ease;
   box-shadow: 0 0 15px 4px rgba($color: #000000, $alpha: 0.2);
   font-size: 1rem;
+
   &.active {
     transition: all 0.2s ease;
     left: 34%;
@@ -280,6 +248,7 @@ export default {
     margin-bottom: -3px;
   }
 }
+
 .iconOpen {
   position: absolute;
   left: 1rem;
@@ -292,6 +261,7 @@ export default {
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 0 15px 4px rgba($color: #000000, $alpha: 0.2);
+
   &.active {
     transition: all 0.2s ease;
     left: 35%;
@@ -301,6 +271,7 @@ export default {
     font-size: 1.25rem;
   }
 }
+
 .container {
   width: calc(30% + 1rem);
   overflow-y: auto;
@@ -355,6 +326,7 @@ export default {
 
   .actions {
     margin-bottom: 1rem;
+
     .filterButton {
       display: inline-flex;
       align-items: center;
@@ -381,6 +353,7 @@ export default {
     font-size: 14px;
     border-radius: 100px;
   }
+
   .listItems {
     display: grid;
     grid-template-columns: repeat(2, 50%);
@@ -394,6 +367,7 @@ export default {
 
       .item {
         margin-bottom: 0.5rem;
+
         .itemBadge {
           display: none;
         }
@@ -412,8 +386,10 @@ export default {
       font-size: 12px;
       cursor: pointer;
       position: relative;
+
       .itemImage {
         margin-bottom: 0.5rem;
+
         img {
           width: 100%;
           height: 150px;
