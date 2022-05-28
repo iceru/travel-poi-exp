@@ -24,8 +24,29 @@ const isOpen = computed(() => {
         <div class="form-checkbox">
           <input
             type="checkbox"
+            id="poi"
+            value="poi"
+            checked
+            v-model="formValues.categories"
+          />
+          <label for="poi">Point of Interest</label>
+        </div>
+        <div class="form-checkbox">
+          <input
+            type="checkbox"
+            id="experiences"
+            value="exp"
+            checked
+            v-model="formValues.categories"
+          />
+          <label for="experiences">Experiences</label>
+        </div>
+        <div class="form-checkbox">
+          <input
+            type="checkbox"
             id="accommodation"
             value="0"
+            checked
             v-model="formValues.categories"
           />
           <label for="accommodation">Accommodation</label>
@@ -35,6 +56,7 @@ const isOpen = computed(() => {
             type="checkbox"
             id="activity"
             value="1"
+            checked
             v-model="formValues.categories"
           />
           <label for="activity">Activity</label>
@@ -45,6 +67,7 @@ const isOpen = computed(() => {
             type="checkbox"
             id="restaurant"
             value="2"
+            checked
             v-model="formValues.categories"
           />
           <label for="restaurant">Restaurant</label>
@@ -55,6 +78,7 @@ const isOpen = computed(() => {
             type="checkbox"
             id="shopping"
             value="3"
+            checked
             v-model="formValues.categories"
           />
           <label for="shopping">Shopping</label>
@@ -102,7 +126,7 @@ export default {
         keywords: "",
         date: new Date(),
         pax: 1,
-        categories: [],
+        categories: ["poi", "exp", "0", "1", "2", "3"],
         duration: 1,
         minRange: 0,
         maxRange: 9999,

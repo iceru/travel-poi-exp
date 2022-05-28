@@ -2,10 +2,12 @@ import { defineStore } from "pinia";
 import url from "@/helpers/endpoints.js";
 import { useServicesStore } from "./services";
 import { useAppStore } from "./app";
+import { usePoiStore } from "./poi";
+import { useExperiencesStore } from "./experiences";
 
 export const useFilterStore = defineStore('filter', {
     state: () => ({
-        isOpen: false
+        isOpen: false,
     }),
     getters: {
         getIsOpen(state) {
@@ -20,6 +22,11 @@ export const useFilterStore = defineStore('filter', {
             this.isOpen = false
         },
         setFilter(values) {
+            const storeServices = useServicesStore();
+            const storePoi = usePoiStore();
+            const storeExp = useExperiencesStore();
+            const app = useAppStore();
+
             if (values.minRange !== 0) {
                 if (values.minRange === 0) {
                     url.bodyServices.Filter.Bookability.RateRange = {};
@@ -42,23 +49,31 @@ export const useFilterStore = defineStore('filter', {
             if (values.duration) {
                 url.bodyServices.Filter.Bookability.NightsCapability = values.duration;
             }
-            console.log(values.categories)
-            if (values.categories.length === 0) {
-                delete url.bodyServices.Filter.TagCriteria;
+            debugger;
+            if (values.categories.includes('poi') && app.items.filter(el => el.data.Type === 6).length === 0) {
+                app.mergeItems(storePoi.poi)
             } else {
-                url.bodyServices.Filter.TagCriteria = {
-                    IndustryCategoryGroups: values.categories,
-                };
+                app.items = app.items.filter(el => el.data.Type !== 6);
+                values.categories.filter(el => el !== 'poi');
             }
 
+            if (!values.categories.includes('exp')) {
+                app.items = app.items.filter(el => el.data.Type !== 5);
+                values.categories.filter(el => el !== 'exp');
+            } else if (app.items.filter(el => el.data.Type === 5).length === 0) {
+                app.mergeItems(storeExp.experiences);
+            }
+            const datas = ['poi', 'exp']
+            const requestCategories = values.categories.filter(el => !datas.includes(el));
+
+            url.bodyServices.Filter.TagCriteria = {
+                IndustryCategoryGroups: requestCategories,
+            };
             if (values.keywords) {
                 url.bodyServices.Filter.Names = [values.keywords];
             } else {
                 delete url.bodyServices.Filter.Names;
             }
-
-            const storeServices = useServicesStore();
-            const app = useAppStore();
 
             storeServices.fetchServices(url.bodyServices);
             app.itemsLoading = true;

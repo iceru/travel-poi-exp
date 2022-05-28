@@ -4,10 +4,12 @@ import { computed } from "@vue/runtime-core";
 import { useMapStore } from "../stores/map";
 import { useAppStore } from "../stores/app";
 import Detail from "./Detail.vue";
+import { useExperiencesStore } from "../stores/experiences";
 
 const storeFilter = useFilterStore();
 const storeApp = useAppStore();
 const storeMap = useMapStore();
+const storeExp = useExperiencesStore();
 
 const selected = computed(() => {
   return storeMap.selectedItem;
@@ -18,9 +20,13 @@ const itemsLoading = computed(() => {
 });
 
 const items = computed(() => {
-  return storeApp.items?.sort((a, b) =>
-    a.data?.Name?.localeCompare(b.data?.Name)
-  );
+  console.log(storeApp.items);
+  const listItems = storeApp.items.filter((el) => el.data.Type !== 5);
+  return listItems.sort((a, b) => a.data?.Name?.localeCompare(b.data?.Name));
+});
+
+const experiences = computed(() => {
+  return storeApp.items.filter((el) => el.data.Type === 5);
 });
 
 const sidebar = computed(() => {
@@ -48,6 +54,51 @@ const sidebar = computed(() => {
       <div class="actions">
         <div @click="storeFilter.openFilter()" class="filterButton">
           <BIconFilter /> Filter
+        </div>
+      </div>
+      <p class="experiences-title" v-if="experiences.length > 0">Experiences</p>
+      <div class="listItems experiences" v-if="experiences.length > 0">
+        <div v-for="item in experiences" :key="item.data.Id" class="item">
+          <div
+            class="wishlistBtn"
+            @click="storeApp.addToWishlists(item)"
+            v-if="!item.data.Wishlist"
+          >
+            <BIconHeart />
+          </div>
+          <div
+            class="wishlistBtn"
+            @click="storeApp.removeWishlist(item)"
+            v-if="item.data.Wishlist"
+          >
+            <BIconHeartFill />
+          </div>
+          <div
+            class="itemBadge"
+            :class="
+              typeName(
+                item.data.Type,
+                item.data.IndustryCategoryGroups?.length > 0 &&
+                  item.data.IndustryCategoryGroups[0],
+                'class'
+              )
+            "
+          >
+            {{
+              typeName(
+                item.data.Type,
+                item.data.IndustryCategoryGroups?.length > 0 &&
+                  item.data.IndustryCategoryGroups[0],
+                "text"
+              )
+            }}
+          </div>
+          <div class="itemTitle" @click="storeMap.selectMarker(item)">
+            {{ item.data.Name }}
+          </div>
+          <div class="itemDesc" v-if="item.data.LongDescription">
+            {{ item.data.LongDescription }}
+          </div>
         </div>
       </div>
       <div class="listItems">
@@ -178,46 +229,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.iconOpen {
-  position: absolute;
-  left: 1rem;
-  top: 1rem;
-  background-color: white;
-  padding: 0.5rem;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 0 15px 4px rgba($color: #000000, $alpha: 0.2);
-  &.active {
-    transition: all 0.2s ease;
-    left: 35%;
-  }
-
-  svg {
-    font-size: 1.25rem;
-  }
-}
-
-.itemsLoad {
-  position: absolute;
-  z-index: 3;
-  background-color: white;
-  width: 100%;
-  top: 0;
-  left: 0;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  img {
-    width: 40px;
-    margin-top: -2rem;
-  }
-}
-
 .iconWishlists {
   position: absolute;
   right: 1rem;
@@ -241,15 +252,26 @@ export default {
     margin-bottom: -3px;
   }
 }
-
-.loadMore {
-  width: calc(100% - 1rem);
-  text-align: center;
-  background-color: cornflowerblue;
-  color: white;
+.iconOpen {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  background-color: white;
   padding: 0.5rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  margin-bottom: 2rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 15px 4px rgba($color: #000000, $alpha: 0.2);
+  &.active {
+    transition: all 0.2s ease;
+    left: 35%;
+  }
+
+  svg {
+    font-size: 1.25rem;
+  }
 }
 .container {
   width: calc(30% + 1rem);
@@ -264,6 +286,34 @@ export default {
   transform: translateX(-100%);
   transition: all 0.2s ease;
   box-shadow: 8px 0 20px rgba($color: #000000, $alpha: 0.15);
+
+  .loadMore {
+    width: calc(100% - 1rem);
+    text-align: center;
+    background-color: cornflowerblue;
+    color: white;
+    padding: 0.5rem;
+    cursor: pointer;
+    margin-bottom: 2rem;
+  }
+
+  .itemsLoad {
+    position: absolute;
+    z-index: 3;
+    background-color: white;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 40px;
+      margin-top: -2rem;
+    }
+  }
 
   &.active {
     transition: all 0.2s ease;
@@ -291,11 +341,43 @@ export default {
       }
     }
   }
+
+  .experiences-title {
+    margin-bottom: 1rem;
+    background-color: #a7d129;
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    font-weight: normal;
+    color: white;
+    font-size: 14px;
+    border-radius: 100px;
+  }
   .listItems {
     display: grid;
     grid-template-columns: repeat(2, 50%);
     gap: 12px;
     padding-bottom: 1rem;
+
+    &.experiences {
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid lightgray;
+
+      .item {
+        margin-bottom: 0.5rem;
+        .itemBadge {
+          display: none;
+        }
+
+        .wishlistBtn {
+          position: relative;
+          top: 0;
+          left: 0;
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
 
     .item {
       margin-bottom: 1rem;

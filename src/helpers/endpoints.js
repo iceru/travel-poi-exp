@@ -108,7 +108,11 @@ const bodyServices = {
       Size: 42
     }
   },
-  ShortName: "TestDistributor"
+  ShortName: "TestDistributor",
+  Paging: {
+    PageNumber: 1,
+    PageSize: 12,
+  },
 }
 
 const quoteRequest = {

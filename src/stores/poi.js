@@ -21,6 +21,7 @@ export const usePoiStore = defineStore('poi', {
         async fetchPoi() {
             const app = useAppStore();
             app.itemsLoading = true;
+            app.items = [];
             
             try {
                 await axios

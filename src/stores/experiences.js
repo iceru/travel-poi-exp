@@ -22,7 +22,7 @@ export const useExperiencesStore = defineStore('experiences', {
                         this.experiences = response.data.Entities;
                         const app = useAppStore();
                         const services = useServicesStore();
-
+                        
                         services.fetchServices();
                         app.mergeItems(response.data.Entities);
                     });
