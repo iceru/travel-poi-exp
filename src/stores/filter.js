@@ -42,14 +42,14 @@ export const useFilterStore = defineStore('filter', {
             if (values.duration) {
                 url.bodyServices.Filter.Bookability.NightsCapability = values.duration;
             }
-
-            // if (values.category === "all") {
-            //     delete url.bodyServices.Filter.TagCriteria;
-            // } else {
-            //     url.bodyServices.Filter.TagCriteria = {
-            //         IndustryCategoryGroups: [values.category],
-            //     };
-            // }
+            console.log(values.categories)
+            if (values.categories.length === 0) {
+                delete url.bodyServices.Filter.TagCriteria;
+            } else {
+                url.bodyServices.Filter.TagCriteria = {
+                    IndustryCategoryGroups: values.categories,
+                };
+            }
 
             if (values.keywords) {
                 url.bodyServices.Filter.Names = [values.keywords];
