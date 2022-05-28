@@ -11,8 +11,7 @@ const path = computed(() => {
 });
 
 const pathData = computed(() => {
-  console.log(storeMap.pathData);
-  return storeMap.pathData;
+  return storeMap.getPathData;
 });
 
 const markers = computed(() => {
@@ -151,10 +150,7 @@ export default {
   name: "MapDetail",
   setup() {
     const storeMap = useMapStore();
-    const pathData = computed(() => {
-      return storeMap.pathData;
-    });
-    return { pathData };
+    return { storeMap };
   },
   data() {
     return {
@@ -179,8 +175,8 @@ export default {
     };
   },
   watch: {
-    pathData: function (newPathdata, oldPathData) {
-      if (this.pathData.length > 0) {
+    pathDataAct: function (newPathdata, oldPathData) {
+      if (this.storeMap.pathData.length > 0) {
         this.startMapDetail();
       }
     },
@@ -194,13 +190,13 @@ export default {
     },
 
     positioning(itenary) {
-      this.selected = this.pathData[itenary];
+      this.selected = this.storeMap.pathData[itenary];
       this.centerDetail.lat = this.selected.position.lat;
       this.centerDetail.lng = this.selected.position.lng;
     },
 
     nextMarker() {
-      if (this.itenary < this.pathData.length - 1) {
+      if (this.itenary < this.storeMap.pathData.length - 1) {
         this.itenary++;
         this.zoom = 10;
         this.positioning(this.itenary);
@@ -219,12 +215,11 @@ export default {
     },
 
     goToFinish() {
-      this.itenary = this.pathData.length - 1;
+      this.itenary = this.storeMap.pathData.length - 1;
       this.positioning(this.itenary);
     },
     startMapDetail() {
-      console.log(this.pathData);
-      this.selectMarkerDetail(this.pathData[0]);
+      this.selectMarkerDetail(this.storeMap.pathData[0]);
       this.zoom = 10;
       this.centerDetail.lat = this.selected?.position?.lat;
       this.centerDetail.lng = this.selected?.position?.lng;
@@ -260,8 +255,8 @@ export default {
     },
   },
   mounted() {
-    console.log(this.pathData);
-    if (this.pathData) {
+    console.log(this.storeMap.pathData);
+    if (this.storeMap.pathData) {
       this.startMapDetail();
     }
   },
