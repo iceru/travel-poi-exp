@@ -152,4 +152,10 @@ export default {
   text-align: center;
   text-overflow: ellipsis;
 }
+
+img[src="/images/accommodation.png"] {
+  filter: drop-shadow(2px 0 0 red);
+  width: 33px !important;
+  height: 44px !important;
+}
 </style>

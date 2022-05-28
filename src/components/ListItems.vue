@@ -9,7 +9,6 @@ import { useExperiencesStore } from "../stores/experiences";
 const storeFilter = useFilterStore();
 const storeApp = useAppStore();
 const storeMap = useMapStore();
-const storeExp = useExperiencesStore();
 
 const selected = computed(() => {
   return storeMap.selectedItem;
@@ -22,11 +21,40 @@ const itemsLoading = computed(() => {
 const items = computed(() => {
   console.log(storeApp.items);
   const listItems = storeApp.items.filter((el) => el.data.Type !== 5);
-  return listItems.sort((a, b) => a.data?.Name?.localeCompare(b.data?.Name));
+  let sorted = listItems;
+  if (storeApp.sort == "Name-Ascending") {
+    sorted = listItems.sort((a, b) =>
+      a.data?.Name?.localeCompare(b.data?.Name)
+    );
+  }
+
+  if (storeApp.sort == "Name-Descending") {
+    sorted = listItems.sort((a, b) =>
+      b.data?.Name?.localeCompare(a.data?.Name)
+    );
+  }
+
+  if (storeApp.sort == "Price-Ascending") {
+    sorted = listItems.sort((a, b) =>
+      a.data?.Availability?.Calendar.LowesRate?.localeCompare(
+        b.data?.Availability?.Calendar?.LowesRate
+      )
+    );
+  }
+  if (storeApp.sort == "Price-Descending") {
+    sorted = listItems.sort((a, b) =>
+      b.data?.Availability?.Calendar.LowesRate?.localeCompare(
+        a.data?.Availability?.Calendar?.LowesRate
+      )
+    );
+  }
+  return sorted;
 });
 
 const experiences = computed(() => {
-  return storeApp.items.filter((el) => el.data.Type === 5);
+  return storeApp.items
+    .filter((el) => el.data.Type === 5)
+    .sort((a, b) => a.data?.Name?.localeCompare(b.data?.Name));
 });
 
 const sidebar = computed(() => {
@@ -47,10 +75,10 @@ const sidebar = computed(() => {
     <BIconHeartFill />
   </div>
   <div class="container" :class="sidebar ? 'active' : ''">
-    <div v-if="Object.keys(selected).length === 0">
-      <div class="itemsLoad" v-if="itemsLoading">
-        <img src="/images/loading.gif" alt="" />
-      </div>
+    <div class="itemsLoad" v-if="itemsLoading">
+      <img src="/images/loading.gif" alt="" />
+    </div>
+    <div v-if="Object.keys(selected).length === 0 && !itemsLoading">
       <div class="actions">
         <div @click="storeFilter.openFilter()" class="filterButton">
           <BIconFilter /> Filter
@@ -166,7 +194,7 @@ const sidebar = computed(() => {
       </div>
     </div>
 
-    <Detail v-if="Object.keys(selected).length > 0" />
+    <Detail v-if="Object.keys(selected).length > 0 && !itemsLoading" />
   </div>
 </template>
 

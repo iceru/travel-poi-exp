@@ -371,7 +371,12 @@ export default {
 }
 
 .desc {
-  display: block !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  font-size: 12px;
 }
 
 .detailPin {

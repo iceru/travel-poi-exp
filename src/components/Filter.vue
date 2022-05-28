@@ -1,8 +1,10 @@
 <script setup>
 import { computed } from "@vue/runtime-core";
+import { useAppStore } from "../stores/app";
 import { useFilterStore } from "../stores/filter";
 
 const storeFilter = useFilterStore();
+const storeApp = useAppStore();
 
 const isOpen = computed(() => {
   return storeFilter.isOpen;
@@ -96,6 +98,15 @@ const isOpen = computed(() => {
         <label class="form-label" for="">Duration of Stay</label>
         <input class="form-input" v-model="formValues.duration" type="number" />
       </div>
+      <div class="form-groups">
+        <label class="form-label" for="">Duration of Stay</label>
+        <select class="form-input" v-model="storeApp.sort" type="number">
+          <option value="Name-Ascending">Name - Ascending</option>
+          <option value="Name-Descending">Name - Descending</option>
+          <option value="Price-Ascending">Price - Ascending</option>
+          <option value="Price-Descending">Price - Descending</option>
+        </select>
+      </div>
       <div class="form-groups w-100">
         <label class="form-label" for="">Price Range</label>
         <input
@@ -118,8 +129,16 @@ const isOpen = computed(() => {
 </template>
 
 <script>
+import { useAppStore } from "../stores/app";
 export default {
   name: "Filter",
+  setup() {
+    const storeApp = useAppStore();
+    const sortApp = computed(() => {
+      return storeApp.sort;
+    });
+    return { sortApp };
+  },
   data() {
     return {
       formValues: {
@@ -211,6 +230,10 @@ export default {
       &.w-50 {
         width: calc(48% - 2rem) !important;
       }
+    }
+
+    select {
+      width: 92% !important;
     }
   }
 }

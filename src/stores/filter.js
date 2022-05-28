@@ -49,12 +49,11 @@ export const useFilterStore = defineStore('filter', {
             if (values.duration) {
                 url.bodyServices.Filter.Bookability.NightsCapability = values.duration;
             }
-            debugger;
-            if (values.categories.includes('poi') && app.items.filter(el => el.data.Type === 6).length === 0) {
-                app.mergeItems(storePoi.poi)
-            } else {
+            if (!values.categories.includes('poi') ) {
                 app.items = app.items.filter(el => el.data.Type !== 6);
                 values.categories.filter(el => el !== 'poi');
+            } else if(app.items.filter(el => el.data.Type === 6).length === 0) {
+                app.mergeItems(storePoi.poi)
             }
 
             if (!values.categories.includes('exp')) {
@@ -69,6 +68,16 @@ export const useFilterStore = defineStore('filter', {
             url.bodyServices.Filter.TagCriteria = {
                 IndustryCategoryGroups: requestCategories,
             };
+            debugger;
+
+            if (app.sort) {
+                url.bodyServices.Sorting = [
+                    {
+                        By: `${app.sort.split("-")[0]}`,
+                        Direction: `${app.sort.split("-")[1]}`,
+                    },
+                ];
+            }
             if (values.keywords) {
                 url.bodyServices.Filter.Names = [values.keywords];
             } else {

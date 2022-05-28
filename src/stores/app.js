@@ -5,6 +5,7 @@ export const useAppStore = defineStore('app', {
         wishlists: [],
         wishlistsModal: false,
         itemsLoading: false,
+        sort: 'Name-Ascending',
     }),
     getters: {
         getItems(state) {
