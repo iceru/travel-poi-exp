@@ -294,7 +294,9 @@ export default {
     },
   },
   mounted() {
-    this.startMapDetail();
+    if (this.pathData) {
+      this.startMapDetail();
+    }
   },
 };
 </script>
