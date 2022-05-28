@@ -1,6 +1,6 @@
 <script setup>
 import { useFilterStore } from "../stores/filter";
-import { computed } from "@vue/runtime-core";
+import { computed, onMounted } from "@vue/runtime-core";
 import { useMapStore } from "../stores/map";
 import { useAppStore } from "../stores/app";
 import Detail from "./Detail.vue";
@@ -18,35 +18,8 @@ const itemsLoading = computed(() => {
 });
 
 const items = computed(() => {
-  const listItems = storeApp.items.filter((el) => el.data.Type !== 5);
-  let sorted = listItems;
-  if (storeApp.sort == "Name-Ascending") {
-    sorted = listItems.sort((a, b) =>
-      a.data?.Name?.localeCompare(b.data?.Name)
-    );
-  }
-
-  if (storeApp.sort == "Name-Descending") {
-    sorted = listItems.sort((a, b) =>
-      b.data?.Name?.localeCompare(a.data?.Name)
-    );
-  }
-
-  if (storeApp.sort == "Price-Ascending") {
-    sorted = listItems.sort((a, b) =>
-      a.data?.Availability?.Calendar.LowesRate?.localeCompare(
-        b.data?.Availability?.Calendar?.LowesRate
-      )
-    );
-  }
-  if (storeApp.sort == "Price-Descending") {
-    sorted = listItems.sort((a, b) =>
-      b.data?.Availability?.Calendar.LowesRate?.localeCompare(
-        a.data?.Availability?.Calendar?.LowesRate
-      )
-    );
-  }
-  return sorted;
+  console.log(storeApp.sortedItems);
+  return storeApp.sortedItems;
 });
 
 const experiences = computed(() => {
@@ -58,6 +31,8 @@ const experiences = computed(() => {
 const sidebar = computed(() => {
   return storeMap.sidebarOpen;
 });
+
+onMounted(() => { storeApp.sortItems() });
 </script>
 
 <template>
@@ -164,7 +139,7 @@ const sidebar = computed(() => {
 </template>
 
 <script>
-import { mapWritableState } from 'pinia'
+import { mapWritableState, mapState } from 'pinia'
 import { useAppStore } from "../stores/app";
 
 export default {
@@ -173,48 +148,17 @@ export default {
     return {
       currentPage: 1,
       maxPerPage: 10,
-      items: this.items,
       showLoadMore: true,
     };
   },
   computed: {
-    ...mapWritableState(useAppStore, ['items', 'sort']),
-    itemsComputed() {
-      const listItems = this.items.filter((el) => el.data.Type !== 5);
-      let sorted = listItems;
-      if (this.sort == "Name-Ascending") {
-        sorted = listItems.sort((a, b) =>
-          a.data?.Name?.localeCompare(b.data?.Name)
-        );
-      }
+    ...mapWritableState(useAppStore, ['sortedItems']),
 
-      if (this.sort == "Name-Descending") {
-        sorted = listItems.sort((a, b) =>
-          b.data?.Name?.localeCompare(a.data?.Name)
-        );
-      }
-
-      if (this.sort == "Price-Ascending") {
-        sorted = listItems.sort((a, b) =>
-          a.data?.Availability?.Calendar.LowesRate?.localeCompare(
-            b.data?.Availability?.Calendar?.LowesRate
-          )
-        );
-      }
-      if (this.sort == "Price-Descending") {
-        sorted = listItems.sort((a, b) =>
-          b.data?.Availability?.Calendar.LowesRate?.localeCompare(
-            a.data?.Availability?.Calendar?.LowesRate
-          )
-        );
-      }
-      return sorted;
-    },
     totalItems() {
-      return Object.keys(this.itemsComputed).length;
+      return Object.keys(this.sortedItems).length;
     },
     paginatedItems() {
-      return this.itemsComputed?.slice(0, this.currentPage * this.maxPerPage);;
+      return this.sortedItems?.slice(0, this.currentPage * this.maxPerPage);;
     },
 
   },

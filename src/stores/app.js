@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useAppStore = defineStore('app', {
     state: () => ({
         items: [],
+        sortedItems: [],
         wishlists: [],
         wishlistsModal: false,
         itemsLoading: false,
@@ -32,7 +33,7 @@ export const useAppStore = defineStore('app', {
             }
             const app = useAppStore();
             const selectedItem = app.items.find((el) => el.data.Id === item.Id);
-            if(selectedItem) {
+            if (selectedItem) {
                 selectedItem.data.Wishlist = true;
             }
         },
@@ -40,7 +41,7 @@ export const useAppStore = defineStore('app', {
             this.wishlists = this.wishlists.filter(e => e.Id !== item.Id);
             const app = useAppStore();
             const selectedItem = app.items.find((el) => el.data.Id === item.Id);
-            if(selectedItem) {
+            if (selectedItem) {
                 selectedItem.data.Wishlist = false;
             }
         },
@@ -49,6 +50,38 @@ export const useAppStore = defineStore('app', {
         },
         closeWishlists() {
             this.wishlistsModal = false
+        },
+        sortItems() {
+            debugger;
+            const listItems = this.items.filter((el) => el.data.Type !== 5);
+            let sorted = listItems;
+            if (this.sort == "Name-Ascending") {
+                sorted = listItems.sort((a, b) =>
+                    a.data?.Name?.localeCompare(b.data?.Name)
+                );
+            }
+
+            if (this.sort == "Name-Descending") {
+                sorted = listItems.sort((a, b) =>
+                    b.data?.Name?.localeCompare(a.data?.Name)
+                );
+            }
+
+            if (this.sort == "Price-Ascending") {
+                sorted = listItems.sort((a, b) =>
+                    a.data?.Availability?.Calendar.LowesRate?.localeCompare(
+                        b.data?.Availability?.Calendar?.LowesRate
+                    )
+                );
+            }
+            if (this.sort == "Price-Descending") {
+                sorted = listItems.sort((a, b) =>
+                    b.data?.Availability?.Calendar.LowesRate?.localeCompare(
+                        a.data?.Availability?.Calendar?.LowesRate
+                    )
+                );
+            }
+            this.sortedItems = sorted;
         }
     }
 })
