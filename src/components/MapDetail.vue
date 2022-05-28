@@ -215,7 +215,9 @@ export default {
   },
   watch: {
     pathData: function (newPathdata, oldPathData) {
-      this.startMapDetail();
+      if (this.pathData.length > 0) {
+        this.startMapDetail();
+      }
     },
   },
   methods: {
