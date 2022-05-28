@@ -18,7 +18,6 @@ const itemsLoading = computed(() => {
 });
 
 const items = computed(() => {
-  console.log(storeApp.items);
   const listItems = storeApp.items.filter((el) => el.data.Type !== 5);
   let sorted = listItems;
   if (storeApp.sort == "Name-Ascending") {
@@ -165,7 +164,7 @@ const sidebar = computed(() => {
 </template>
 
 <script>
-import { mapState } from 'pinia'
+import { mapWritableState } from 'pinia'
 import { useAppStore } from "../stores/app";
 
 export default {
@@ -179,30 +178,30 @@ export default {
     };
   },
   computed: {
-    ...mapState(useAppStore, ['items']),
+    ...mapWritableState(useAppStore, ['items', 'sort']),
     itemsComputed() {
-      let sorted = this.items.filter((el) => el.data.Type !== 5);
-
-      if (storeApp.sort == "Name-Ascending") {
+      const listItems = this.items.filter((el) => el.data.Type !== 5);
+      let sorted = listItems;
+      if (this.sort == "Name-Ascending") {
         sorted = listItems.sort((a, b) =>
           a.data?.Name?.localeCompare(b.data?.Name)
         );
       }
 
-      if (storeApp.sort == "Name-Descending") {
+      if (this.sort == "Name-Descending") {
         sorted = listItems.sort((a, b) =>
           b.data?.Name?.localeCompare(a.data?.Name)
         );
       }
 
-      if (storeApp.sort == "Price-Ascending") {
+      if (this.sort == "Price-Ascending") {
         sorted = listItems.sort((a, b) =>
           a.data?.Availability?.Calendar.LowesRate?.localeCompare(
             b.data?.Availability?.Calendar?.LowesRate
           )
         );
       }
-      if (storeApp.sort == "Price-Descending") {
+      if (this.sort == "Price-Descending") {
         sorted = listItems.sort((a, b) =>
           b.data?.Availability?.Calendar.LowesRate?.localeCompare(
             a.data?.Availability?.Calendar?.LowesRate
