@@ -24,65 +24,29 @@ const isOpen = computed(() => {
       </div>
       <div class="form-groups checkbox w-100">
         <div class="form-checkbox">
-          <input
-            type="checkbox"
-            id="poi"
-            value="poi"
-            checked
-            v-model="formValues.categories"
-          />
+          <input type="checkbox" id="poi" value="poi" checked v-model="formValues.categories" />
           <label for="poi">Point of Interest</label>
         </div>
         <div class="form-checkbox">
-          <input
-            type="checkbox"
-            id="experiences"
-            value="exp"
-            checked
-            v-model="formValues.categories"
-          />
+          <input type="checkbox" id="experiences" value="exp" checked v-model="formValues.categories" />
           <label for="experiences">Experiences</label>
         </div>
         <div class="form-checkbox">
-          <input
-            type="checkbox"
-            id="accommodation"
-            value="0"
-            checked
-            v-model="formValues.categories"
-          />
+          <input type="checkbox" id="accommodation" value="0" checked v-model="formValues.categories" />
           <label for="accommodation">Accommodation</label>
         </div>
         <div class="form-checkbox">
-          <input
-            type="checkbox"
-            id="activity"
-            value="1"
-            checked
-            v-model="formValues.categories"
-          />
+          <input type="checkbox" id="activity" value="1" checked v-model="formValues.categories" />
           <label for="activity">Activity</label>
         </div>
 
         <div class="form-checkbox">
-          <input
-            type="checkbox"
-            id="restaurant"
-            value="2"
-            checked
-            v-model="formValues.categories"
-          />
+          <input type="checkbox" id="restaurant" value="2" checked v-model="formValues.categories" />
           <label for="restaurant">Restaurant</label>
         </div>
 
         <div class="form-checkbox">
-          <input
-            type="checkbox"
-            id="shopping"
-            value="3"
-            checked
-            v-model="formValues.categories"
-          />
+          <input type="checkbox" id="shopping" value="3" checked v-model="formValues.categories" />
           <label for="shopping">Shopping</label>
         </div>
       </div>
@@ -109,20 +73,12 @@ const isOpen = computed(() => {
       </div>
       <div class="form-groups w-100">
         <label class="form-label" for="">Price Range</label>
-        <input
-          class="form-input w-50"
-          v-model="formValues.minRange"
-          type="number"
-        />
+        <input class="form-input w-50" v-model="formValues.minRange" type="number" />
         -
-        <input
-          class="form-input w-50"
-          v-model="formValues.maxRange"
-          type="number"
-        />
+        <input class="form-input w-50" v-model="formValues.maxRange" type="number" />
       </div>
     </div>
-    <button class="submit" v-on:click="storeFilter.setFilter(formValues)">
+    <button class="btn btn-default submit" v-on:click="storeFilter.setFilter(formValues)">
       Submit
     </button>
   </div>
@@ -168,6 +124,13 @@ export default {
   padding: 1rem 1.5rem;
   box-shadow: 0 0 32px rgba($color: #000000, $alpha: 0.4);
 
+  .btn {
+    padding: .75rem 1.25rem;
+    outline: none;
+    border: none;
+    border-radius: 8px;
+  }
+
   @media screen and (max-width: 576px) {
     width: 80%;
   }
@@ -186,6 +149,7 @@ export default {
   .forms {
     display: flex;
     flex-wrap: wrap;
+
     .form-groups {
       margin-bottom: 1rem;
       width: 50%;
@@ -203,6 +167,7 @@ export default {
         grid-template-columns: repeat(2, 1fr);
       }
     }
+
     .form-checkbox {
       font-size: 13px;
       margin-bottom: 0.25rem;
@@ -214,6 +179,7 @@ export default {
         margin-right: 6px;
       }
     }
+
     .form-label {
       display: block;
       margin-bottom: 0.5rem;
@@ -227,6 +193,7 @@ export default {
       outline: none;
       font-size: 12px;
       width: calc(95% - 2rem);
+
       &.w-50 {
         width: calc(48% - 2rem) !important;
       }
