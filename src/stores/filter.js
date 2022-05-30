@@ -4,6 +4,7 @@ import { useServicesStore } from "./services";
 import { useAppStore } from "./app";
 import { usePoiStore } from "./poi";
 import { useExperiencesStore } from "./experiences";
+import axios from "axios";
 
 export const useFilterStore = defineStore('filter', {
     state: () => ({
@@ -20,6 +21,15 @@ export const useFilterStore = defineStore('filter', {
         },
         closeFilter() {
             this.isOpen = false
+        },
+        async getLocations() {
+            try {
+                await axios.post(url.endpoints.getLocations, url.bodyLocations).then((response) => {
+                    console.log(response);
+                })
+            } catch(error) {
+                console.log(error);
+            }
         },
         setFilter(values) {
             const storeServices = useServicesStore();

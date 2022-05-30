@@ -1,13 +1,16 @@
 <script setup>
 import { useFilterStore } from "../stores/filter";
-import { computed, onMounted } from "@vue/runtime-core";
+import { computed } from "@vue/runtime-core";
 import { useMapStore } from "../stores/map";
 import { useAppStore } from "../stores/app";
 import Detail from "./Detail.vue";
+import { usePoiStore } from "../stores/poi";
+import { useServicesStore } from "../stores/services";
 
 const storeFilter = useFilterStore();
 const storeApp = useAppStore();
 const storeMap = useMapStore();
+const storeServices = useServicesStore();
 
 const selected = computed(() => {
   return storeMap.selectedItem;
@@ -45,7 +48,7 @@ const maxPerPage = computed(() => { return storeApp.maxPerPage })
     <BIconLayoutSidebarInset />
   </div>
   <div class="iconWishlists" @click="storeApp.toggleWishlists()">
-    Wishlists
+    {{ $t("message.whislists") }}
     <BIconHeartFill />
   </div>
   <div class="container" :class="sidebar ? 'active' : ''">
@@ -56,6 +59,17 @@ const maxPerPage = computed(() => { return storeApp.maxPerPage })
       <div class="actions">
         <div @click="storeFilter.openFilter()" class="filterButton">
           <BIconFilter /> Filter
+        </div>
+        <div class="selection">
+          <select v-model="storeApp.lang">
+            <option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale">{{
+                locale.slice(0, 2)
+            }}
+            </option>
+          </select>
+          <select v-model="storeApp.currency" @change="storeServices.fetchServices()">
+            <option v-for="curr in currencies" :value="curr">{{ curr }}</option>
+          </select>
         </div>
       </div>
       <p class="experiences-title" v-if="experiences.length > 0">Experiences</p>
@@ -151,6 +165,7 @@ export default {
   data() {
     return {
       showLoadMore: true,
+      currencies: ['GBP', 'USD', 'IDR']
     };
   },
   methods: {
@@ -293,6 +308,19 @@ export default {
 
   .actions {
     margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+
+    .selection {
+      display: flex;
+    }
+
+    select {
+      padding: .5rem .75rem;
+      margin-left: .5rem;
+      border-radius: 8px;
+      text-transform: uppercase;
+    }
 
     .filterButton {
       display: inline-flex;

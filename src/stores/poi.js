@@ -22,10 +22,14 @@ export const usePoiStore = defineStore('poi', {
             const app = useAppStore();
             app.itemsLoading = true;
             app.items = [];
+            String.prototype.splice = function(idx, rem, str) {
+                return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+            };
+            const lang = app.lang.splice(2,0,'-')
             
             try {
                 await axios
-                .post(url.endpoints.search, url.body(6, "TestDistributor"))
+                .post(url.endpoints.search, url.body(6, "TestDistributor", lang))
                 .then((response) => {
                   this.poi = response.data.Entities;
                   const exp = useExperiencesStore();

@@ -8,10 +8,12 @@ import { usePoiStore } from "../stores/poi";
 import { useExperiencesStore } from "../stores/experiences";
 import { useServicesStore } from "../stores/services";
 import Wishlists from "../components/Wishlists.vue";
+import { useFilterStore } from "../stores/filter";
 
 const storePoi = usePoiStore();
 const storeExp = useExperiencesStore();
 const storeServices = useServicesStore();
+const storeFilter = useFilterStore();
 
 const poi = computed(() => {
   return storePoi.poi;
@@ -27,6 +29,7 @@ const services = computed(() => {
 
 onMounted(() => {
   storePoi.fetchPoi();
+  storeFilter.getLocations();
 });
 </script>
 

@@ -15,9 +15,12 @@ export const useExperiencesStore = defineStore('experiences', {
     },
     actions: {
         async fetchExperiences() {
+            const storeApp = useAppStore();
+            const lang = storeApp.lang.splice(2, 0, '-');
+
             try {
                 await axios
-                    .post(url.endpoints.search, url.body(5, "TestDistributor"))
+                    .post(url.endpoints.search, url.body(5, "TestDistributor", lang))
                     .then((response) => {
                         this.experiences = response.data.Entities;
                         const app = useAppStore();

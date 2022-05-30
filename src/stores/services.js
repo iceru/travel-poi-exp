@@ -14,9 +14,11 @@ export const useServicesStore = defineStore('services', {
     },
     actions: {
         async fetchServices(request) {
+            const storeApp = useAppStore();
+            const lang = storeApp.lang.splice(2, 0, '-');
             try {
                 await axios
-                    .post(url.endpoints.search, request ? request : url.bodyServices)
+                    .post(url.endpoints.search, request ? request : url.bodyServices(lang, storeApp.currency))
                     .then((response) => {
                         this.services = response.data.Entities;
                         const app = useAppStore();

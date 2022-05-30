@@ -8,22 +8,23 @@ import { BootstrapIconsPlugin } from "bootstrap-icons-vue";
 import { createPinia } from "pinia";
 import VueLazyLoad from 'vue3-lazyload';
 import { createI18n } from 'vue-i18n'
+import { useAppStore } from "./stores/app";
 const messages = {
-  en: {
+  enUS: {
     message: {
-      hello: 'hello world'
+      whislists: 'Whislists'
     }
   },
-  ja: {
+  zhCN: {
     message: {
-      hello: 'こんにちは、世界'
+      whislists: '名单'
     }
   }
 }
 
 const i18n = createI18n({
-  locale: 'en',
-  fallbackLocale: 'id', 
+  locale: 'enUS',
+  fallbackLocale: 'zhCN', 
   messages, 
 })
 
@@ -42,3 +43,11 @@ app.use(VueGoogleMaps, {
 app.use(VueAxios, axios);
 
 app.mount("#app");
+
+
+const storeApp = useAppStore();
+
+storeApp.$subscribe((_, state) => {
+  console.info(state);
+  i18n.global.locale = state.lang;
+});

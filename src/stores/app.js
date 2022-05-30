@@ -9,6 +9,8 @@ export const useAppStore = defineStore('app', {
         currentPage: 1,
         maxPerPage: 10,
         sort: 'Name-Ascending',
+        lang: 'enUS',
+        currency: 'GBP',
     }),
     getters: {
         getItems(state) {
