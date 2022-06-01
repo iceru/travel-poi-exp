@@ -48,6 +48,5 @@ app.mount("#app");
 const storeApp = useAppStore();
 
 storeApp.$subscribe((_, state) => {
-  console.info(state);
   i18n.global.locale = state.lang;
 });

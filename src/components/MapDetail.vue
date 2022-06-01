@@ -286,7 +286,7 @@ export default {
     display: flex;
     align-items: center;
     text-decoration: none;
-    background: cornflowerblue;
+    background: #404040;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
     font-size: 12px;
@@ -316,7 +316,7 @@ export default {
   left: 0.5rem;
   padding: 0.5rem;
   border-radius: 8px;
-  background: rgba($color: cornflowerblue, $alpha: 0.8);
+  background: rgba($color: black, $alpha: 0.8);
   color: white;
   font-size: small;
 }

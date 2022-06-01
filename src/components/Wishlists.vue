@@ -22,18 +22,21 @@ const wishlists = computed(() => {
     <div class="wishlist-items">
       <div class="item" v-for="item in wishlists">
         <div class="wish-img">
-          <img
-            v-lazy="item.Images ? item.Images[0].Url : '/images/no_image.png'"
-            alt=""
-          />
+          <img v-lazy="item.Images ? item.Images[0].Url : '/images/no_image.png'" alt="" />
         </div>
         <div>
           <h5 class="wish-title">{{ item.Name }}</h5>
           <p class="wish-desc">{{ item.LongDescription }}</p>
         </div>
         <div class="icon-delete" @click="storeApp.removeWishlist(item)">
-          <div><BIconTrash /></div>
+          <div>
+            <BIconTrash />
+          </div>
         </div>
+      </div>
+      <div class="empty" v-if="wishlists.length === 0">
+        Wishlists is Empty
+        <BIconEmojiFrown />
       </div>
     </div>
   </div>
@@ -66,6 +69,18 @@ export default {
   padding: 1rem 1.5rem;
   box-shadow: 0 0 32px rgba($color: #000000, $alpha: 0.4);
 
+  .empty {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      margin-left: .5rem;
+      margin-bottom: -2px;
+    }
+  }
+
   .icon-close {
     text-align: end;
     cursor: pointer;
@@ -83,6 +98,7 @@ export default {
 
     .wish-img {
       margin-right: 1rem;
+
       img {
         width: 80px;
         height: 80px;

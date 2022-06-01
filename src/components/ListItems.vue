@@ -4,8 +4,8 @@ import { computed } from "@vue/runtime-core";
 import { useMapStore } from "../stores/map";
 import { useAppStore } from "../stores/app";
 import Detail from "./Detail.vue";
-import { usePoiStore } from "../stores/poi";
 import { useServicesStore } from "../stores/services";
+import { currencyFormatter } from "../helpers/formatter"
 
 const storeFilter = useFilterStore();
 const storeApp = useAppStore();
@@ -75,12 +75,6 @@ const maxPerPage = computed(() => { return storeApp.maxPerPage })
       <p class="experiences-title" v-if="experiences.length > 0">Experiences</p>
       <div class="listItems experiences" v-if="experiences.length > 0">
         <div v-for="item in experiences" :key="item.data.Id" class="item">
-          <div class="wishlistBtn" @click="storeApp.addToWishlists(item)" v-if="!item.data.Wishlist">
-            <BIconHeart />
-          </div>
-          <div class="wishlistBtn" @click="storeApp.removeWishlist(item)" v-if="item.data.Wishlist">
-            <BIconHeartFill />
-          </div>
           <div class="itemBadge" :class="
             typeName(
               item.data.Type,
@@ -116,11 +110,13 @@ const maxPerPage = computed(() => { return storeApp.maxPerPage })
             " alt="" />
           </div>
 
-          <div class="wishlistBtn" @click="storeApp.addToWishlists(item.data)" v-if="!item.data.Wishlist">
-            <BIconHeart />
-          </div>
-          <div class="wishlistBtn" @click="storeApp.removeWishlist(item.data)" v-if="item.data.Wishlist">
-            <BIconHeartFill />
+          <div v-if="item.data.Type === 3">
+            <div class="wishlistBtn" @click="storeApp.addToWishlists(item.data)" v-if="!item.data.Wishlist">
+              <BIconHeart />
+            </div>
+            <div class="wishlistBtn" @click="storeApp.removeWishlist(item.data)" v-if="item.data.Wishlist">
+              <BIconHeartFill />
+            </div>
           </div>
           <div class="itemBadge" :class="
             typeName(
@@ -144,7 +140,7 @@ const maxPerPage = computed(() => { return storeApp.maxPerPage })
           </div>
           <div class="itemDesc">{{ item.data.LongDescription }}</div>
           <div class="itemPrice" v-if="item.data.Type === 3">
-            Starts From £{{ item.data.Availability?.Calendar?.LowestRate }}
+            Starts From {{ currencyFormatter(storeApp.currency, item.data.Availability?.Calendar?.LowestRate) }}
           </div>
         </div>
       </div>
@@ -271,10 +267,11 @@ export default {
   .loadMore {
     width: calc(100% - 1rem);
     text-align: center;
-    background-color: cornflowerblue;
+    background-color: #404040;
     color: white;
-    padding: 0.5rem;
+    padding: 0.75rem;
     cursor: pointer;
+    border-radius: 8px;
     margin-bottom: 2rem;
   }
 
@@ -327,9 +324,10 @@ export default {
       align-items: center;
       cursor: pointer;
       padding: 0.5rem;
-      border: 1px solid black;
       border-radius: 8px;
       font-weight: bold;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.75);
 
       svg {
         margin-right: 0.25rem;

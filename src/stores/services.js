@@ -16,20 +16,21 @@ export const useServicesStore = defineStore('services', {
         async fetchServices(request) {
             const storeApp = useAppStore();
             const lang = storeApp.lang.splice(2, 0, '-');
+            storeApp.itemsLoading = true;
             try {
                 await axios
                     .post(url.endpoints.search, request ? request : url.bodyServices(lang, storeApp.currency))
                     .then((response) => {
                         this.services = response.data.Entities;
-                        const app = useAppStore();
-                        app.items = app.items.filter(el => el.data.Type !== 3);
-                        app.itemsLoading = false;
-                        app.mergeItems(response.data.Entities);
-                        app.sortItems();
+                        storeApp.items = storeApp.items.filter(el => el.data.Type !== 3);
+                        storeApp.itemsLoading = false;
+                        storeApp.mergeItems(response.data.Entities);
+                        storeApp.sortItems();
                     });
             }
             catch (error) {
                 console.log(error);
+                storeApp.itemsLoading = false;
             }
         }
     }
