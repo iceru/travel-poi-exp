@@ -16,57 +16,39 @@ const center = computed(() => {
 </script>
 
 <template v-if="dataReady">
-  <GMapMap
-    :center="center"
-    :zoom="7"
-    map-type-id="terrain"
-    :options="{
-      streetViewControl: false,
-      mapTypeControl: false,
-      scaleControl: false,
-      fullscreenControl: false,
-      styles: [
-        {
-          featureType: 'poi',
-          stylers: [{ visibility: 'off' }],
-        },
-      ],
-    }"
-    style="width: 100vw; height: 100vh"
-  >
+  <GMapMap :center="center" :zoom="7" map-type-id="terrain" :options="{
+    streetViewControl: false,
+    mapTypeControl: false,
+    scaleControl: false,
+    fullscreenControl: false,
+    styles: [
+      {
+        featureType: 'poi',
+        stylers: [{ visibility: 'off' }],
+      },
+    ],
+  }" style="width: 100vw; height: 100vh">
     <GMapCluster :zoomOnClick="true" :minimumClusterSize="5">
-      <GMapMarker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        :clickable="true"
-        :draggable="false"
+      <GMapMarker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false"
         :icon="{
           url: iconMap(
             m.data.Type,
             m.data.IndustryCategoryGroups?.length > 0 &&
-              m.data.IndustryCategoryGroups[0]
+            m.data.IndustryCategoryGroups[0]
           ),
-          scaledSize: { width: 35, height: 45 },
-        }"
-        @click="
-          storeMap.selectMarker(m);
-          selectMarker(m);
-          storeMap.openSidebar();
-        "
-        @mouseover="showByIndex = index"
-        @mouseout="showByIndex = null"
-      >
+          scaledSize: { width: 55, height: 75 },
+        }" @click="
+  storeMap.selectMarker(m);
+selectMarker(m);
+storeMap.openSidebar();
+" @mouseover="showByIndex = index" @mouseout="showByIndex = null">
         <GMapInfoWindow :opened="showByIndex === index">
           <div class="popupImage" v-if="m.data.Type !== 5">
-            <img
-              v-lazy="
-                m.data.Images && m.data.Images.length > 0
-                  ? m.data.Images[0].Url
-                  : '/images/no_image.png'
-              "
-              :alt="m.data.Name"
-            />
+            <img v-lazy="
+              m.data.Images && m.data.Images.length > 0
+                ? m.data.Images[0].Url
+                : '/images/no_image.png'
+            " :alt="m.data.Name" />
           </div>
           <div class="popupName">
             {{ m.data.Name }}
@@ -136,6 +118,7 @@ export default {
 <style lang="scss">
 .popupImage {
   text-align: center;
+
   img {
     height: 60px;
     width: auto;
@@ -151,5 +134,59 @@ export default {
   overflow: hidden;
   text-align: center;
   text-overflow: ellipsis;
+}
+
+img[src="/images/poi.png"] {
+  filter: drop-shadow(0 0 6px #7868e6);
+  width: 35px !important;
+  height: 45px !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
+}
+
+img[src="/images/experience.png"] {
+  filter: drop-shadow(0 0 6px #a7d129);
+  width: 35px !important;
+  height: 45px !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
+}
+
+img[src="/images/activity.png"] {
+  filter: drop-shadow(0 0 6px #ea5455);
+  width: 35px !important;
+  height: 45px !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
+}
+
+img[src="/images/accommodation.png"] {
+  filter: drop-shadow(0 0 6px #2d4059);
+  width: 35px !important;
+  height: 45px !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
+}
+
+img[src="/images/restaurant.png"] {
+  filter: drop-shadow(0 0 6px #f07b3f);
+  width: 35px !important;
+  height: 45px !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
+}
+
+img[src="/images/shopping.png"] {
+  filter: drop-shadow(0 0 6px #ffd460);
+  width: 35px !important;
+  height: 45px !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
 }
 </style>
