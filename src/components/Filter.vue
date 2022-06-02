@@ -23,6 +23,14 @@ const isOpen = computed(() => {
         <label class="form-label" for="">Keywords</label>
         <input class="form-input" v-model="formValues.keywords" type="text" />
       </div>
+      <!-- <div class="form-groups w-100">
+        <label class="form-label" for="">Locations</label>
+        <input
+          class="form-input"
+          v-model="storeFilter.locationsName"
+          type="text"
+        />
+      </div> -->
       <div class="form-groups checkbox w-100">
         <div class="form-checkbox">
           <input
@@ -166,7 +174,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 75%;
+  height: 80%;
   width: 30%;
   border-radius: 1rem;
   padding: 1rem 1.5rem;
@@ -181,6 +189,10 @@ export default {
 
   @media screen and (max-width: 576px) {
     width: 80%;
+  }
+
+  @media screen and (min-width: 1400px) {
+    height: 55%;
   }
 
   .icon-close {

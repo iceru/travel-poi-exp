@@ -13,7 +13,6 @@ const storeFilter = useFilterStore();
 
 onMounted(() => {
   storePoi.fetchPoi();
-  storeFilter.getLocations();
 });
 </script>
 

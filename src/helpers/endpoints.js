@@ -5,7 +5,7 @@ const pageEndpoint = `${baseEndpoint}/Pages`;
 
 const endpoints = {
   search: `${serviceEndpoint}/EntityService.jsws/Search`,
-  getLocations: `${serviceEndpoint}/EntityService.jsws/GetPrimaryLocations`,
+  quickSearch: `${serviceEndpoint}/EntityService.jsws/QuickSearch`,
   injection: `${serviceEndpoint}/Injection.aspx`,
   searchPage: `${pageEndpoint}/Search.aspx`,
   bookingQuote: `${serviceEndpoint}/BookingService.jsws/GetBookingQuote`,
@@ -122,7 +122,7 @@ const bodyServices = (lang = 'en-US', currency = 'GBP') => {
 }
 
 const bodyLocations = {
-    LocationType: 'Region'
+  LocationType: 'Region'
 }
 
 const quoteRequest = {
@@ -149,5 +149,28 @@ const quoteRequest = {
     Shortname: 'TestDistributor',
   },
 };
+
+const qsRequest =  (name) => {
+  const request = {
+    Campaign: {
+      AdCampaignCode: null
+    },
+    ParentCodes: null,
+    Names: [`%${name}%`],
+    DistributorShortname: "TestDistributor",
+    IndustryCategoryGroup: 3,
+    MaxResultsToReturn: 10,
+    Types: [
+      40,
+      30,
+      0,
+      1,
+      2,
+      3
+    ]
+  }
+
+  return request
+}
 
 export default { endpoints, body, bodyServices, quoteRequest, bodyLocations };

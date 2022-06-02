@@ -20,12 +20,18 @@ const selected = computed(() => {
         <BIconArrowLeft />
         Back
       </div>
-      <div class="image" v-if="selected?.Type !== 5 && selected?.Images?.length < 2">
-        <img v-lazy="
-          selected?.Images && selected?.Images.length === 1
-            ? selected?.Images[0].Url
-            : '/images/no_image.png'
-        " alt="" />
+      <div
+        class="image"
+        v-if="selected?.Type !== 5 && selected?.Images?.length < 2"
+      >
+        <img
+          v-lazy="
+            selected?.Images && selected?.Images.length === 1
+              ? selected?.Images[0].Url
+              : '/images/no_image.png'
+          "
+          alt=""
+        />
       </div>
       <carousel :items-to-show="1" v-if="selected?.Images?.length > 1">
         <slide v-for="slide in selected?.Images" :key="slide">
@@ -43,7 +49,7 @@ const selected = computed(() => {
       </div>
       <div class="address" v-if="selected?.PhysicalAddress">
         {{
-            `${selected?.PhysicalAddress?.Line1}, ${selected?.PhysicalAddress?.City}, ${selected?.PhysicalAddress?.State}
+          `${selected?.PhysicalAddress?.Line1}, ${selected?.PhysicalAddress?.City}, ${selected?.PhysicalAddress?.State}
                 ${selected?.PhysicalAddress?.CountryName}`
         }}
       </div>
@@ -51,14 +57,23 @@ const selected = computed(() => {
         {{ selected?.LongDescription }}
       </div>
 
-      <span v-if="
-        selected?.LongDescription &&
-        selected?.LongDescription.split(' ').length > 50
-      " class="more" @click="more = !more">{{ textMore }}</span>
-      <div class="wishlist" v-if="selected?.Type === 3" @click="storeApp.addToWishlists(selected)">
+      <span
+        v-if="
+          selected?.LongDescription &&
+          selected?.LongDescription.split(' ').length > 50
+        "
+        class="more"
+        @click="more = !more"
+        >{{ textMore }}</span
+      >
+      <div
+        class="wishlist"
+        v-if="selected?.Type === 3"
+        @click="storeApp.addToWishlists(selected)"
+      >
         Add to Wishlists
       </div>
-      <div class="check-price" v-if="selected?.Type === 3">
+      <!-- <div class="check-price" v-if="selected?.Type === 3">
         <h4>Check Price & Availability</h4>
         <div class="forms">
           <input v-model="formValues.date" type="date" />
@@ -68,7 +83,7 @@ const selected = computed(() => {
             Search
           </button>
         </div>
-      </div>
+      </div> -->
       <div class="serviceList">
         <ServiceList />
       </div>
@@ -116,7 +131,7 @@ export default {
 
   .img-carousel {
     width: 100%;
-    height: 260px;
+    height: 18vw;
     object-fit: cover;
     border-radius: 20px;
   }

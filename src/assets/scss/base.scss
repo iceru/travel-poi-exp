@@ -16,11 +16,12 @@ html {
 
 .wishlist {
     margin-top: 12px;
-    padding: 0.5rem 0.75rem;
     background-color: #404040;
     color: white;
     text-align: center;
     cursor: pointer;
+    padding: 0.75rem;
+    border-radius: 8px;
 }
 
 .overlay-bg {

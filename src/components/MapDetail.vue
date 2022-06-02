@@ -24,13 +24,19 @@ const markers = computed(() => {
 
 <template>
   <div class="mapDetailContainer" v-if="pathData.length > 1">
-    <GMapMap :center="centerDetail" :zoom="zoom" :options="{
-      zoomControl: false,
-      streetViewControl: false,
-      mapTypeControl: false,
-      scaleControl: false,
-      fullscreenControl: false,
-    }" map-type-id="terrain" style="width: 100%; height: 22vw">
+    <GMapMap
+      :center="centerDetail"
+      :zoom="zoom"
+      :options="{
+        zoomControl: false,
+        streetViewControl: false,
+        mapTypeControl: false,
+        scaleControl: false,
+        fullscreenControl: false,
+      }"
+      map-type-id="terrain"
+      style="width: 100%; height: 22vw"
+    >
       <!-- <GMapMarker
         :key="index"
         v-for="(m, index) in pathData"
@@ -46,41 +52,61 @@ const markers = computed(() => {
           <div class="popupDesc">{{ m.data.Description }}</div>
         </GMapInfoWindow>
       </GMapMarker> -->
-      <GMapMarker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false"
-        :icon="{
-          url: iconMap(
-            m.data.Type,
-            m.data.IndustryCategoryGroups?.length > 0 &&
-            m.data.IndustryCategoryGroups[0]
-          ),
-          scaledSize: { width: 35, height: 45 },
-        }" @click="selectMarkerDetail(m)" @mouseover="showByIndex = index" @mouseout="showByIndex = null">
-        <GMapInfoWindow :opened="showByIndex === index">
-          <div class="popupImage" v-if="m.data.Type !== 5">
-            <img v-lazy="
-              m.data.Images && m.data.Images.length > 0
-                ? m.data.Images[0].Url
-                : '/images/no_image.png'
-            " :alt="m.data.Name" />
-          </div>
-          <div class="popupTitle">{{ m.data.Name }}</div>
-          <div class="popupDesc">{{ m.data.LongDescription }}</div>
-        </GMapInfoWindow>
-      </GMapMarker>
-      <GMapPolyline :path="path" :options="{
-        strokeColor: '#B311CF',
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
-        icons: [
-          { icon: lineSymbol, offset: '95%' },
-          { icon: lineSymbol, offset: '75%' },
-          { icon: lineSymbol, offset: '50%' },
-          { icon: lineSymbol, offset: '25%' },
-          { icon: lineSymbol, offset: '5%' },
-        ],
-      }" :editable="false" ref="polyline" />
+      <GMapCluster :zoomOnClick="true" :minimumClusterSize="5">
+        <GMapMarker
+          :key="index"
+          v-for="(m, index) in markers"
+          :position="m.position"
+          :clickable="true"
+          :draggable="false"
+          :icon="{
+            url: iconMap(
+              m.data.Type,
+              m.data.IndustryCategoryGroups?.length > 0 &&
+                m.data.IndustryCategoryGroups[0]
+            ),
+            scaledSize: { width: 55, height: 75 },
+          }"
+          @click="selectMarkerDetail(m)"
+          @mouseover="showByIndex = index"
+          @mouseout="showByIndex = null"
+        >
+          <GMapInfoWindow :opened="showByIndex === index">
+            <div class="popupImage" v-if="m.data.Type !== 5">
+              <img
+                v-lazy="
+                  m.data.Images && m.data.Images.length > 0
+                    ? m.data.Images[0].Url
+                    : '/images/no_image.png'
+                "
+                :alt="m.data.Name"
+              />
+            </div>
+            <div class="popupTitle">{{ m.data.Name }}</div>
+            <div class="popupDesc">{{ m.data.LongDescription }}</div>
+          </GMapInfoWindow>
+        </GMapMarker>
+      </GMapCluster>
+
+      <GMapPolyline
+        :path="path"
+        :options="{
+          strokeColor: '#B311CF',
+          strokeOpacity: 1.0,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35,
+          icons: [
+            { icon: lineSymbol, offset: '95%' },
+            { icon: lineSymbol, offset: '75%' },
+            { icon: lineSymbol, offset: '50%' },
+            { icon: lineSymbol, offset: '25%' },
+            { icon: lineSymbol, offset: '5%' },
+          ],
+        }"
+        :editable="false"
+        ref="polyline"
+      />
     </GMapMap>
     <div class="popupInfo">Click on a pin to see more details</div>
     <div class="navDetail" v-if="selected">
@@ -92,7 +118,12 @@ const markers = computed(() => {
       </div>
 
       <div class="btnWrapper">
-        <a href="#" class="left" v-show="itenary < pathData.length - 1" @click="nextMarker">Next &nbsp;
+        <a
+          href="#"
+          class="left"
+          v-show="itenary < pathData.length - 1"
+          @click="nextMarker"
+          >Next &nbsp;
           <BIconChevronRight />
         </a>
         <a href="#" @click="goToFinish">Finish</a>
@@ -108,20 +139,33 @@ const markers = computed(() => {
     </div>
 
     <div class="detailActivity" v-if="selectedActivity">
-      <div class="image" v-if="
-        selectedActivity?.data?.Type !== 5 &&
-        selectedActivity?.data?.Images?.length < 2
-      ">
-        <img v-lazy="
-          selectedActivity?.data?.Images &&
+      <div
+        class="image"
+        v-if="
+          selectedActivity?.data?.Type !== 5 &&
+          selectedActivity?.data?.Images?.length < 2
+        "
+      >
+        <img
+          v-lazy="
+            selectedActivity?.data?.Images &&
             selectedActivity?.data?.Images.length === 1
-            ? selectedActivity?.data?.Images[0].Url
-            : '/images/no_image.png'
-        " alt="" />
+              ? selectedActivity?.data?.Images[0].Url
+              : '/images/no_image.png'
+          "
+          alt=""
+        />
       </div>
-      <carousel :items-to-show="1" v-if="selectedActivity?.data?.Images?.length > 1">
+      <carousel
+        :items-to-show="1"
+        v-if="selectedActivity?.data?.Images?.length > 1"
+      >
         <slide v-for="slide in selectedActivity?.data?.Images" :key="slide">
-          <img v-lazy="slide.Url" class="img-carousel" :alt="selectedActivity?.data?.Name" />
+          <img
+            v-lazy="slide.Url"
+            class="img-carousel"
+            :alt="selectedActivity?.data?.Name"
+          />
         </slide>
 
         <template #addons>
@@ -135,7 +179,11 @@ const markers = computed(() => {
       <div class="desc">
         {{ selectedActivity?.data?.LongDescription }}
       </div>
-      <div class="wishlist" v-if="selectedActivity?.Type !== 5" @click="storeApp.addToWishlists(selectedActivity)">
+      <div
+        class="wishlist"
+        v-if="selectedActivity?.Type === 3"
+        @click="storeApp.addToWishlists(selectedActivity)"
+      >
         Add to Wishlists
       </div>
     </div>
@@ -145,7 +193,7 @@ const markers = computed(() => {
 <script>
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import { useMapStore } from "../stores/map";
-import { mapWritableState } from 'pinia'
+import { mapWritableState } from "pinia";
 
 export default {
   name: "MapDetail",
@@ -179,7 +227,7 @@ export default {
     },
   },
   computed: {
-    ...mapWritableState(useMapStore, ['pathData'])
+    ...mapWritableState(useMapStore, ["pathData"]),
   },
   methods: {
     selectMarkerDetail(geo) {
@@ -308,6 +356,10 @@ export default {
   padding-top: 2rem;
   border-top: 1px solid lightgray;
   margin-bottom: 3rem;
+}
+
+.detail .img-carousel {
+  height: 200px;
 }
 
 .popupInfo {

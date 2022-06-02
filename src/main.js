@@ -15,12 +15,14 @@ import "vue-toastification/dist/index.css";
 const messages = {
   enUS: {
     message: {
-      whislists: 'Whislists'
+      whislists: 'Whislists',
+      filter: "Filter"
     }
   },
   zhCN: {
     message: {
-      whislists: '名单'
+      whislists: '名单',
+      filter: '筛选'
     }
   }
 }

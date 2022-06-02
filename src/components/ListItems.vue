@@ -5,7 +5,7 @@ import { useMapStore } from "../stores/map";
 import { useAppStore } from "../stores/app";
 import Detail from "./Detail.vue";
 import { useServicesStore } from "../stores/services";
-import { currencyFormatter } from "../helpers/formatter"
+import { currencyFormatter } from "../helpers/formatter";
 
 const storeFilter = useFilterStore();
 const storeApp = useAppStore();
@@ -38,13 +38,20 @@ const sidebar = computed(() => {
   return storeMap.sidebarOpen;
 });
 
-const currentPage = computed(() => { return storeApp.currentPage })
-const maxPerPage = computed(() => { return storeApp.maxPerPage })
-
+const currentPage = computed(() => {
+  return storeApp.currentPage;
+});
+const maxPerPage = computed(() => {
+  return storeApp.maxPerPage;
+});
 </script>
 
 <template>
-  <div class="iconOpen" @click="storeMap.toggleSidebar()" :class="sidebar ? 'active' : ''">
+  <div
+    class="iconOpen"
+    @click="storeMap.toggleSidebar()"
+    :class="sidebar ? 'active' : ''"
+  >
     <BIconLayoutSidebarInset />
   </div>
   <div class="iconWishlists" @click="storeApp.toggleWishlists()">
@@ -58,16 +65,22 @@ const maxPerPage = computed(() => { return storeApp.maxPerPage })
     <div v-if="Object.keys(selected).length === 0 && !itemsLoading">
       <div class="actions">
         <div @click="storeFilter.openFilter()" class="filterButton">
-          <BIconFilter /> Filter
+          <BIconFilter /> {{ $t("message.filter") }}
         </div>
         <div class="selection">
           <select v-model="storeApp.lang">
-            <option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale">{{
-                locale.slice(0, 2)
-            }}
+            <option
+              v-for="locale in $i18n.availableLocales"
+              :key="`locale-${locale}`"
+              :value="locale"
+            >
+              {{ locale.slice(0, 2) }}
             </option>
           </select>
-          <select v-model="storeApp.currency" @change="storeServices.fetchServices()">
+          <select
+            v-model="storeApp.currency"
+            @change="storeServices.fetchServices()"
+          >
             <option v-for="curr in currencies" :value="curr">{{ curr }}</option>
           </select>
         </div>
@@ -75,21 +88,24 @@ const maxPerPage = computed(() => { return storeApp.maxPerPage })
       <p class="experiences-title" v-if="experiences.length > 0">Experiences</p>
       <div class="listItems experiences" v-if="experiences.length > 0">
         <div v-for="item in experiences" :key="item.data.Id" class="item">
-          <div class="itemBadge" :class="
-            typeName(
-              item.data.Type,
-              item.data.IndustryCategoryGroups?.length > 0 &&
-              item.data.IndustryCategoryGroups[0],
-              'class'
-            )
-          ">
-            {{
-                typeName(
-                  item.data.Type,
-                  item.data.IndustryCategoryGroups?.length > 0 &&
+          <div
+            class="itemBadge"
+            :class="
+              typeName(
+                item.data.Type,
+                item.data.IndustryCategoryGroups?.length > 0 &&
                   item.data.IndustryCategoryGroups[0],
-                  "text"
-                )
+                'class'
+              )
+            "
+          >
+            {{
+              typeName(
+                item.data.Type,
+                item.data.IndustryCategoryGroups?.length > 0 &&
+                  item.data.IndustryCategoryGroups[0],
+                "text"
+              )
             }}
           </div>
           <div class="itemTitle" @click="storeMap.selectMarker(item)">
@@ -103,36 +119,50 @@ const maxPerPage = computed(() => { return storeApp.maxPerPage })
       <div class="listItems">
         <div v-for="item in sortedItems" :key="item.data.Id" class="item">
           <div class="itemImage" @click="storeMap.selectMarker(item)">
-            <img v-lazy="
-              item.data.Images
-                ? item.data.Images[0].Url
-                : '/images/no_image.png'
-            " alt="" />
+            <img
+              v-lazy="
+                item.data.Images
+                  ? item.data.Images[0].Url
+                  : '/images/no_image.png'
+              "
+              alt=""
+            />
           </div>
 
           <div v-if="item.data.Type === 3">
-            <div class="wishlistBtn" @click="storeApp.addToWishlists(item.data)" v-if="!item.data.Wishlist">
+            <div
+              class="wishlistBtn"
+              @click="storeApp.addToWishlists(item.data)"
+              v-if="!item.data.Wishlist"
+            >
               <BIconHeart />
             </div>
-            <div class="wishlistBtn" @click="storeApp.removeWishlist(item.data)" v-if="item.data.Wishlist">
+            <div
+              class="wishlistBtn"
+              @click="storeApp.removeWishlist(item.data)"
+              v-if="item.data.Wishlist"
+            >
               <BIconHeartFill />
             </div>
           </div>
-          <div class="itemBadge" :class="
-            typeName(
-              item.data.Type,
-              item.data.IndustryCategoryGroups?.length > 0 &&
-              item.data.IndustryCategoryGroups[0],
-              'class'
-            )
-          ">
-            {{
-                typeName(
-                  item.data.Type,
-                  item.data.IndustryCategoryGroups?.length > 0 &&
+          <div
+            class="itemBadge"
+            :class="
+              typeName(
+                item.data.Type,
+                item.data.IndustryCategoryGroups?.length > 0 &&
                   item.data.IndustryCategoryGroups[0],
-                  "text"
-                )
+                'class'
+              )
+            "
+          >
+            {{
+              typeName(
+                item.data.Type,
+                item.data.IndustryCategoryGroups?.length > 0 &&
+                  item.data.IndustryCategoryGroups[0],
+                "text"
+              )
             }}
           </div>
           <div class="itemTitle" @click="storeMap.selectMarker(item)">
@@ -140,11 +170,21 @@ const maxPerPage = computed(() => { return storeApp.maxPerPage })
           </div>
           <div class="itemDesc">{{ item.data.LongDescription }}</div>
           <div class="itemPrice" v-if="item.data.Type === 3">
-            Starts From {{ currencyFormatter(storeApp.currency, item.data.Availability?.Calendar?.LowestRate) }}
+            Starts From
+            {{
+              currencyFormatter(
+                storeApp.currency,
+                item.data.Availability?.Calendar?.LowestRate
+              )
+            }}
           </div>
         </div>
       </div>
-      <div class="loadMore" v-on:click="storeApp.loadMore()" v-if="currentPage * maxPerPage < storeApp.items.length">
+      <div
+        class="loadMore"
+        v-on:click="storeApp.loadMore()"
+        v-if="currentPage * maxPerPage < storeApp.items.length"
+      >
         Load More
       </div>
     </div>
@@ -161,7 +201,7 @@ export default {
   data() {
     return {
       showLoadMore: true,
-      currencies: ['GBP', 'USD', 'IDR']
+      currencies: ["GBP", "USD", "IDR"],
     };
   },
   methods: {
@@ -243,6 +283,10 @@ export default {
   &.active {
     transition: all 0.2s ease;
     left: 35%;
+
+    @media screen and (min-width: 1400px) {
+      left: 34%;
+    }
   }
 
   svg {
@@ -313,9 +357,9 @@ export default {
     }
 
     select {
-      padding: .5rem .75rem;
-      margin-left: .5rem;
-      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      margin-left: 0.5rem;
+      border-radius: 4px;
       text-transform: uppercase;
     }
 
@@ -324,7 +368,7 @@ export default {
       align-items: center;
       cursor: pointer;
       padding: 0.5rem;
-      border-radius: 8px;
+      border-radius: 4px;
       font-weight: bold;
       color: white;
       background-color: rgba(0, 0, 0, 0.75);
