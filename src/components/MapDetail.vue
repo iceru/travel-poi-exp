@@ -181,7 +181,7 @@ const markers = computed(() => {
       </div>
       <div
         class="wishlist"
-        v-if="selectedActivity?.Type === 3"
+        v-if="selectedActivity?.data.Type === 3"
         @click="storeApp.addToWishlists(selectedActivity)"
       >
         Add to Wishlists
