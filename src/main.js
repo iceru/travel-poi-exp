@@ -9,6 +9,9 @@ import { createPinia } from "pinia";
 import VueLazyLoad from 'vue3-lazyload';
 import { createI18n } from 'vue-i18n'
 import { useAppStore } from "./stores/app";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
 const messages = {
   enUS: {
     message: {
@@ -28,10 +31,15 @@ const i18n = createI18n({
   messages, 
 })
 
+const toastOptions = {
+  pauseOnHover: false
+}
+
 const app = createApp(App);
 
 app.use(router);
 app.use(i18n);
+app.use(Toast, toastOptions);
 app.use(BootstrapIconsPlugin);
 app.use(createPinia());
 app.use(VueLazyLoad);

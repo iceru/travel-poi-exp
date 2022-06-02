@@ -1,4 +1,8 @@
 import { defineStore } from "pinia";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
+
 export const useAppStore = defineStore('app', {
     state: () => ({
         items: [],
@@ -43,6 +47,7 @@ export const useAppStore = defineStore('app', {
             if (selectedItem) {
                 selectedItem.data.Wishlist = true;
             }
+            toast.success('Added to Whishlist!');
         },
         removeWishlist(item) {
             this.wishlists = this.wishlists.filter(e => e.Id !== item.Id);
@@ -51,6 +56,7 @@ export const useAppStore = defineStore('app', {
             if (selectedItem) {
                 selectedItem.data.Wishlist = false;
             }
+            toast.info('Removed from Whislist');
         },
         toggleWishlists() {
             this.wishlistsModal = !this.wishlistsModal;

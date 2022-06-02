@@ -12,6 +12,7 @@ const isOpen = computed(() => {
 </script>
 
 <template>
+  <div class="overlay-bg" v-if="isOpen"></div>
   <div class="container-filter" v-if="isOpen">
     <div class="icon-close" @click="storeFilter.closeFilter()">
       <BIconXLg />
@@ -24,29 +25,65 @@ const isOpen = computed(() => {
       </div>
       <div class="form-groups checkbox w-100">
         <div class="form-checkbox">
-          <input type="checkbox" id="poi" value="poi" checked v-model="formValues.categories" />
+          <input
+            type="checkbox"
+            id="poi"
+            value="poi"
+            checked
+            v-model="formValues.categories"
+          />
           <label for="poi">Point of Interest</label>
         </div>
         <div class="form-checkbox">
-          <input type="checkbox" id="experiences" value="exp" checked v-model="formValues.categories" />
+          <input
+            type="checkbox"
+            id="experiences"
+            value="exp"
+            checked
+            v-model="formValues.categories"
+          />
           <label for="experiences">Experiences</label>
         </div>
         <div class="form-checkbox">
-          <input type="checkbox" id="accommodation" value="0" checked v-model="formValues.categories" />
+          <input
+            type="checkbox"
+            id="accommodation"
+            value="0"
+            checked
+            v-model="formValues.categories"
+          />
           <label for="accommodation">Accommodation</label>
         </div>
         <div class="form-checkbox">
-          <input type="checkbox" id="activity" value="1" checked v-model="formValues.categories" />
+          <input
+            type="checkbox"
+            id="activity"
+            value="1"
+            checked
+            v-model="formValues.categories"
+          />
           <label for="activity">Activity</label>
         </div>
 
         <div class="form-checkbox">
-          <input type="checkbox" id="restaurant" value="2" checked v-model="formValues.categories" />
+          <input
+            type="checkbox"
+            id="restaurant"
+            value="2"
+            checked
+            v-model="formValues.categories"
+          />
           <label for="restaurant">Restaurant</label>
         </div>
 
         <div class="form-checkbox">
-          <input type="checkbox" id="shopping" value="3" checked v-model="formValues.categories" />
+          <input
+            type="checkbox"
+            id="shopping"
+            value="3"
+            checked
+            v-model="formValues.categories"
+          />
           <label for="shopping">Shopping</label>
         </div>
       </div>
@@ -73,12 +110,23 @@ const isOpen = computed(() => {
       </div>
       <div class="form-groups w-100">
         <label class="form-label" for="">Price Range</label>
-        <input class="form-input w-50" v-model="formValues.minRange" type="number" />
+        <input
+          class="form-input w-50"
+          v-model="formValues.minRange"
+          type="number"
+        />
         -
-        <input class="form-input w-50" v-model="formValues.maxRange" type="number" />
+        <input
+          class="form-input w-50"
+          v-model="formValues.maxRange"
+          type="number"
+        />
       </div>
     </div>
-    <button class="btn btn-default submit" v-on:click="storeFilter.setFilter(formValues)">
+    <button
+      class="btn btn-default submit"
+      v-on:click="storeFilter.setFilter(formValues)"
+    >
       Submit
     </button>
   </div>
@@ -125,7 +173,7 @@ export default {
   box-shadow: 0 0 32px rgba($color: #000000, $alpha: 0.4);
 
   .btn {
-    padding: .75rem 1.25rem;
+    padding: 0.75rem 1.25rem;
     outline: none;
     border: none;
     border-radius: 8px;

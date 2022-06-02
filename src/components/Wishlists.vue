@@ -14,6 +14,7 @@ const wishlists = computed(() => {
 </script>
 
 <template>
+  <div class="overlay-bg" v-if="wishlistsModal"></div>
   <div class="container-wishlist" v-if="wishlistsModal">
     <div class="icon-close" @click="storeApp.closeWishlists()">
       <BIconXLg />
@@ -22,7 +23,10 @@ const wishlists = computed(() => {
     <div class="wishlist-items">
       <div class="item" v-for="item in wishlists">
         <div class="wish-img">
-          <img v-lazy="item.Images ? item.Images[0].Url : '/images/no_image.png'" alt="" />
+          <img
+            v-lazy="item.Images ? item.Images[0].Url : '/images/no_image.png'"
+            alt=""
+          />
         </div>
         <div>
           <h5 class="wish-title">{{ item.Name }}</h5>
@@ -68,6 +72,7 @@ export default {
   border-radius: 1rem;
   padding: 1rem 1.5rem;
   box-shadow: 0 0 32px rgba($color: #000000, $alpha: 0.4);
+  z-index: 6;
 
   .empty {
     text-align: center;
@@ -76,7 +81,7 @@ export default {
     align-items: center;
 
     svg {
-      margin-left: .5rem;
+      margin-left: 0.5rem;
       margin-bottom: -2px;
     }
   }
