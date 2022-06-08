@@ -174,7 +174,6 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 80%;
   width: 30%;
   border-radius: 1rem;
   padding: 1rem 1.5rem;
@@ -185,6 +184,7 @@ export default {
     outline: none;
     border: none;
     border-radius: 8px;
+    cursor: pointer;
   }
 
   @media screen and (max-width: 576px) {
