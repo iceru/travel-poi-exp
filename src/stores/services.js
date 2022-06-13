@@ -2,6 +2,7 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import url from "@/helpers/endpoints.js";
 import { useAppStore } from "./app";
+import requests from '@/helpers/requests.js';
 
 export const useServicesStore = defineStore('services', {
     state: () => ({
@@ -19,7 +20,7 @@ export const useServicesStore = defineStore('services', {
             storeApp.itemsLoading = true;
             try {
                 await axios
-                    .post(url.endpoints.search, request ? request : url.bodyServices(lang, storeApp.currency))
+                    .post(url.endpoints.search, request ? request : requests.bodyServices(lang, storeApp.currency))
                     .then((response) => {
                         this.services = response.data.Entities;
                         storeApp.items = storeApp.items.filter(el => el.data.Type !== 3);

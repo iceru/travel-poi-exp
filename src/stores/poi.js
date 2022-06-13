@@ -1,6 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import url from "@/helpers/endpoints.js";
+import requests from '@/helpers/requests.js';
 import { useAppStore } from "./app";
 import { useExperiencesStore } from "./experiences";
 
@@ -22,23 +23,23 @@ export const usePoiStore = defineStore('poi', {
             const app = useAppStore();
             app.itemsLoading = true;
             app.items = [];
-            String.prototype.splice = function(idx, rem, str) {
+            String.prototype.splice = function (idx, rem, str) {
                 return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
             };
-            const lang = app.lang.splice(2,0,'-')
-            
+            const lang = app.lang.splice(2, 0, '-')
+
             try {
                 await axios
-                .post(url.endpoints.search, url.body(6, "TestDistributor", lang))
-                .then((response) => {
-                  this.poi = response.data.Entities;
-                  const exp = useExperiencesStore();
+                    .post(url.endpoints.search, requests.body(6, "TestDistributor", lang))
+                    .then((response) => {
+                        this.poi = response.data.Entities;
+                        const exp = useExperiencesStore();
 
-                  exp.fetchExperiences();
-                  app.mergeItems(response.data.Entities);
-                });
+                        exp.fetchExperiences();
+                        app.mergeItems(response.data.Entities);
+                    });
             }
-            catch(error) {
+            catch (error) {
                 console.log(error);
             }
         },

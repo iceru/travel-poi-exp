@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import url from "@/helpers/endpoints.js";
+import requests from '@/helpers/requests.js';
 import { useServicesStore } from "./services";
 import { useAppStore } from "./app";
 import { usePoiStore } from "./poi";
@@ -25,7 +26,7 @@ export const useFilterStore = defineStore('filter', {
         },
         async primaryLocations() {
             try {
-                await axios.post(url.endpoints.primaryLocations, url.bodyLocations).then((response) => {
+                await axios.post(url.endpoints.primaryLocations, requests.bodyLocations).then((response) => {
                     console.log(response);
                 })
             } catch (error) {
@@ -37,7 +38,7 @@ export const useFilterStore = defineStore('filter', {
             const storePoi = usePoiStore();
             const storeExp = useExperiencesStore();
             const app = useAppStore();
-            const request = url.bodyServices();
+            const request = requests.bodyServices();
 
             if (values.minRange !== 0) {
                 if (values.minRange === 0) {

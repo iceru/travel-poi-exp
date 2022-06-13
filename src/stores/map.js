@@ -1,6 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import url from "@/helpers/endpoints.js";
+import requests from '@/helpers/requests.js';
 
 export const useMapStore = defineStore('map', {
     state: () => ({
@@ -34,36 +35,36 @@ export const useMapStore = defineStore('map', {
                     lng: geo.Geocode.Longitude,
                 });
                 this.pathData.push({
-                id: index,
-                data: geo,
-                position: {
-                    lat: geo.Geocode.Latitude,
-                    lng: geo.Geocode.Longitude,
-                },
+                    id: index,
+                    data: geo,
+                    position: {
+                        lat: geo.Geocode.Latitude,
+                        lng: geo.Geocode.Longitude,
+                    },
                 });
             });
         },
         resetSelected() {
             this.selectedItem = {};
         },
-         getQuote(lists, formValues) {
-            url.quoteRequest.request.Configurations[0].Pax.Adults = parseInt(formValues && formValues.pax) || 2;
-            url.quoteRequest.request.CommencementDate = (formValues && formValues.date) || new Date();
-            url.quoteRequest.request.Duration = parseInt(formValues && formValues.duration) || 1;
+        getQuote(lists, formValues) {
+            requests.quoteRequest.request.Configurations[0].Pax.Adults = parseInt(formValues && formValues.pax) || 2;
+            requests.quoteRequest.request.CommencementDate = (formValues && formValues.date) || new Date();
+            requests.quoteRequest.request.Duration = parseInt(formValues && formValues.duration) || 1;
             this.selectedChildren = [];
             lists.map((item) => {
-                url.quoteRequest.request.IndustryCategoryGroup = item.IndustryCategoryGroups[0];
-                url.quoteRequest.request.IndustryCategory = item.IndustryCategory;
-                url.quoteRequest.request.Configurations[0].ProductId = item.Id;
+                requests.quoteRequest.request.IndustryCategoryGroup = item.IndustryCategoryGroups[0];
+                requests.quoteRequest.request.IndustryCategory = item.IndustryCategory;
+                requests.quoteRequest.request.Configurations[0].ProductId = item.Id;
 
                 try {
-                     axios
-                    .post(url.endpoints.bookingQuote, url.quoteRequest)
-                    .then((response) => {
-                      this.selectedChildren.push(response.data);
-                    });
+                    axios
+                        .post(url.endpoints.bookingQuote, requests.quoteRequest)
+                        .then((response) => {
+                            this.selectedChildren.push(response.data);
+                        });
                 }
-                catch(error) {
+                catch (error) {
                     console.log(error);
                 }
             })

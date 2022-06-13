@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useToast } from "vue-toastification";
 import { useAppStore } from "./app";
+import url from '@/helpers/endpoints'
 
 const toast = useToast();
 
@@ -43,5 +44,51 @@ export const useWishlistsStore = defineStore('wishlists', {
         closeWishlists() {
             this.wishlistsModal = false
         },
+
+        searchInject() {
+            const app = useAppStore();
+            debugger;
+            let products = [];
+
+            this.wishlists.map((item) => {
+                products.push(item.Id)
+            });
+
+            const favourites = {
+                Favourites: products,
+            };
+
+            const formData = [
+                { name: "type", value: "SearchInjection" },
+                { name: "data", value: JSON.stringify(favourites) },
+                { name: "exl_dn", value: 'TestDistributor' },
+                { name: "exl_bs", value: 'TestDistributor' },
+                { name: "exl_lng", value: 'en-US' },
+                { name: "exl_cur", value: app.currency },
+                {
+                    name: "options",
+                    value: JSON.stringify({ OpenInNewWindow: true }),
+                },
+            ];
+
+            const form = document.createElement("form");
+            form.action = url.endpoints.injection;
+            form.method = "POST";
+
+            formData.forEach(function (item) {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = item.name;
+                input.value = item.value;
+
+                form.appendChild(input);
+            });
+
+            document.body.appendChild(form);
+
+            form.submit();
+
+            document.body.removeChild(form);
+        }
     }
 })

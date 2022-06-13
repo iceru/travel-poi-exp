@@ -22,26 +22,38 @@ const wishlists = computed(() => {
       <BIconXLg />
     </div>
     <div class="title">Wishlist</div>
-    <div class="wishlist-items">
-      <div class="item" v-for="item in wishlists">
-        <div class="item-info">
-          <div class="wish-img">
-            <img
-              v-lazy="item.Images ? item.Images[0].Url : '/images/no_image.png'"
-              alt=""
-            />
+    <div class="wishlist-content">
+      <div class="items">
+        <div class="item" v-for="item in wishlists">
+          <div class="item-info">
+            <div class="wish-img">
+              <img
+                v-lazy="
+                  item.Images ? item.Images[0].Url : '/images/no_image.png'
+                "
+                alt=""
+              />
+            </div>
+            <div>
+              <h5 class="wish-title">{{ item.Name }}</h5>
+              <p class="wish-desc">{{ item.LongDescription }}</p>
+            </div>
           </div>
-          <div>
-            <h5 class="wish-title">{{ item.Name }}</h5>
-            <p class="wish-desc">{{ item.LongDescription }}</p>
-          </div>
-        </div>
-        <div class="icon-delete" @click="storeWishlists.removeWishlist(item)">
-          <div>
-            <BIconTrash />
+          <div class="icon-delete" @click="storeWishlists.removeWishlist(item)">
+            <div>
+              <BIconTrash />
+            </div>
           </div>
         </div>
       </div>
+      <div
+        v-if="wishlists.length !== 0"
+        class="button"
+        @click="storeWishlists.searchInject()"
+      >
+        Check Availability
+      </div>
+
       <div class="empty" v-if="wishlists.length === 0">
         Wishlists is Empty
         <BIconEmojiFrown />
@@ -80,6 +92,12 @@ export default {
   box-shadow: 0 0 32px rgba($color: #000000, $alpha: 0.4);
   z-index: 6;
 
+  .wishlist-content {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+  }
+
   .empty {
     text-align: center;
     display: flex;
@@ -103,10 +121,22 @@ export default {
     font-weight: bold;
   }
 
+  .button {
+    width: calc(100% - 1.5rem);
+    text-align: center;
+    background-color: #404040;
+    color: white;
+    padding: 0.75rem;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
   .item {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 1.5rem;
 
     .item-info {
       display: flex;

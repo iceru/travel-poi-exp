@@ -1,6 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import url from "@/helpers/endpoints.js";
+import requests from '@/helpers/requests.js';
 import { useAppStore } from "./app";
 import { useServicesStore } from "./services";
 
@@ -20,12 +21,12 @@ export const useExperiencesStore = defineStore('experiences', {
 
             try {
                 await axios
-                    .post(url.endpoints.search, url.body(5, "TestDistributor", lang))
+                    .post(url.endpoints.search, requests.body(5, "TestDistributor", lang))
                     .then((response) => {
                         this.experiences = response.data.Entities;
                         const app = useAppStore();
                         const services = useServicesStore();
-                        
+
                         services.fetchServices();
                         app.mergeItems(response.data.Entities);
                     });
