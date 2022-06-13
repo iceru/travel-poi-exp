@@ -150,27 +150,4 @@ const quoteRequest = {
   },
 };
 
-const qsRequest =  (name) => {
-  const request = {
-    Campaign: {
-      AdCampaignCode: null
-    },
-    ParentCodes: null,
-    Names: [`%${name}%`],
-    DistributorShortname: "TestDistributor",
-    IndustryCategoryGroup: 3,
-    MaxResultsToReturn: 10,
-    Types: [
-      40,
-      30,
-      0,
-      1,
-      2,
-      3
-    ]
-  }
-
-  return request
-}
-
 export default { endpoints, body, bodyServices, quoteRequest, bodyLocations };

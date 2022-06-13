@@ -37,12 +37,13 @@ export const useFilterStore = defineStore('filter', {
             const storePoi = usePoiStore();
             const storeExp = useExperiencesStore();
             const app = useAppStore();
+            const data = url.bodyServices;
 
             if (values.minRange !== 0) {
                 if (values.minRange === 0) {
-                    url.bodyServices.Filter.Bookability.RateRange = {};
+                    data.request.Filter.Bookability.RateRange = {};
                 } else {
-                    url.bodyServices.Filter.Bookability.RateRange = {
+                    data.request.Filter.Bookability.RateRange = {
                         Min: values.minRange,
                         Max: values.maxRange,
                     };
@@ -50,15 +51,15 @@ export const useFilterStore = defineStore('filter', {
             }
 
             if (values.date) {
-                url.bodyServices.Availability.Window.StartDate = values.date;
+                data.request.Availability.Window.StartDate = values.date;
             }
 
             if (values.pax) {
-                url.bodyServices.Filter.Bookability.GuestsCapability = values.pax;
+                data.request.Filter.Bookability.GuestsCapability = values.pax;
             }
 
             if (values.duration) {
-                url.bodyServices.Filter.Bookability.NightsCapability = values.duration;
+                data.request.Filter.Bookability.NightsCapability = values.duration;
             }
             if (!values.categories.includes('poi') ) {
                 app.items = app.items.filter(el => el.data.Type !== 6);
@@ -76,12 +77,12 @@ export const useFilterStore = defineStore('filter', {
             const datas = ['poi', 'exp']
             const requestCategories = values.categories.filter(el => !datas.includes(el));
 
-            url.bodyServices.Filter.TagCriteria = {
+            data.request.Filter.TagCriteria = {
                 IndustryCategoryGroups: requestCategories,
             };
 
             if (app.sort) {
-                url.bodyServices.Sorting = [
+                data.request.Sorting = [
                     {
                         By: `${app.sort.split("-")[0]}`,
                         Direction: `${app.sort.split("-")[1]}`,
@@ -89,9 +90,9 @@ export const useFilterStore = defineStore('filter', {
                 ];
             }
             if (values.keywords) {
-                url.bodyServices.Filter.Names = [values.keywords];
+                data.request.Filter.Names = [values.keywords];
             } else {
-                delete url.bodyServices.Filter.Names;
+                delete data.request.Filter.Names;
             }
 
             storeServices.fetchServices(url.bodyServices);
