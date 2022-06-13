@@ -3,10 +3,10 @@ import { computed } from "@vue/runtime-core";
 import { useMapStore } from "../stores/map";
 import MapDetail from "./MapDetail.vue";
 import ServiceList from "./ServiceList.vue";
-import { useAppStore } from "../stores/app";
+import { useWishlistsStore } from "../stores/wishlists";
 
 const storeMap = useMapStore();
-const storeApp = useAppStore();
+const storeWishlists = useWishlistsStore();
 
 const selected = computed(() => {
   return storeMap.selectedItem;
@@ -66,13 +66,23 @@ const selected = computed(() => {
         @click="more = !more"
         >{{ textMore }}</span
       >
-      <div
-        class="wishlist"
-        v-if="selected?.Type === 3"
-        @click="storeApp.addToWishlists(selected)"
-      >
-        Add to Wishlists
+      <div v-if="selected?.Type === 3">
+        <div
+          class="wishlist"
+          @click="storeWishlists.addToWishlists(selected)"
+          v-if="!selected.Wishlist"
+        >
+          Add to Wishlists
+        </div>
+        <div
+          class="wishlist remove"
+          @click="storeWishlists.removeWishlist(selected)"
+          v-if="selected.Wishlist"
+        >
+          Remove from Wishlists
+        </div>
       </div>
+
       <!-- <div class="check-price" v-if="selected?.Type === 3">
         <h4>Check Price & Availability</h4>
         <div class="forms">

@@ -185,6 +185,13 @@ export default {
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    transition: background-color .2s ease;
+    background-color: rgb(233, 233, 233);
+
+    &:hover {
+      background-color: rgb(206, 206, 206);
+      transition: background-color .2s ease;
+    }
   }
 
   @media screen and (max-width: 576px) {

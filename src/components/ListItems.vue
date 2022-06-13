@@ -3,6 +3,7 @@ import { useFilterStore } from "../stores/filter";
 import { computed } from "@vue/runtime-core";
 import { useMapStore } from "../stores/map";
 import { useAppStore } from "../stores/app";
+import { useWishlistsStore } from "../stores/wishlists";
 import Detail from "./Detail.vue";
 import { useServicesStore } from "../stores/services";
 import { currencyFormatter } from "../helpers/formatter";
@@ -11,6 +12,7 @@ const storeFilter = useFilterStore();
 const storeApp = useAppStore();
 const storeMap = useMapStore();
 const storeServices = useServicesStore();
+const storeWishlists = useWishlistsStore();
 
 const selected = computed(() => {
   return storeMap.selectedItem;
@@ -18,10 +20,6 @@ const selected = computed(() => {
 
 const itemsLoading = computed(() => {
   return storeApp.itemsLoading;
-});
-
-const items = computed(() => {
-  return storeApp.items;
 });
 
 const sortedItems = computed(() => {
@@ -54,8 +52,8 @@ const maxPerPage = computed(() => {
   >
     <BIconLayoutSidebarInset />
   </div>
-  <div class="iconWishlists" @click="storeApp.toggleWishlists()">
-    {{ $t("message.whislists") }}
+  <div class="iconWishlists" @click="storeWishlists.toggleWishlists()">
+    {{ $t("t.wishlists") }}
     <BIconHeartFill />
   </div>
   <div class="container" :class="sidebar ? 'active' : ''">
@@ -65,7 +63,7 @@ const maxPerPage = computed(() => {
     <div v-if="Object.keys(selected).length === 0 && !itemsLoading">
       <div class="actions">
         <div @click="storeFilter.openFilter()" class="filterButton">
-          <BIconFilter /> {{ $t("message.filter") }}
+          <BIconFilter /> {{ $t("t.filter") }}
         </div>
         <div class="selection">
           <select v-model="storeApp.lang">
@@ -132,14 +130,14 @@ const maxPerPage = computed(() => {
           <div v-if="item.data.Type === 3">
             <div
               class="wishlistBtn"
-              @click="storeApp.addToWishlists(item.data)"
+              @click="storeWishlists.addToWishlists(item.data)"
               v-if="!item.data.Wishlist"
             >
               <BIconHeart />
             </div>
             <div
               class="wishlistBtn"
-              @click="storeApp.removeWishlist(item.data)"
+              @click="storeWishlists.removeWishlist(item.data)"
               v-if="item.data.Wishlist"
             >
               <BIconHeartFill />
@@ -201,7 +199,7 @@ export default {
   data() {
     return {
       showLoadMore: true,
-      currencies: ["GBP", "USD", "IDR"],
+      currencies: ["GBP", "USD"],
     };
   },
   methods: {

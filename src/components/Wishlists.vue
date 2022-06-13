@@ -1,38 +1,42 @@
 <script setup>
 import { computed } from "@vue/runtime-core";
 import { useAppStore } from "../stores/app";
+import { useWishlistsStore } from "../stores/wishlists";
 
 const storeApp = useAppStore();
+const storeWishlists = useWishlistsStore();
 
 const wishlistsModal = computed(() => {
-  return storeApp.wishlistsModal;
+  return storeWishlists.wishlistsModal;
 });
 
 const wishlists = computed(() => {
-  return storeApp.wishlists;
+  return storeWishlists.wishlists;
 });
 </script>
 
 <template>
   <div class="overlay-bg" v-if="wishlistsModal"></div>
   <div class="container-wishlist" v-if="wishlistsModal">
-    <div class="icon-close" @click="storeApp.closeWishlists()">
+    <div class="icon-close" @click="storeWishlists.closeWishlists()">
       <BIconXLg />
     </div>
     <div class="title">Wishlist</div>
     <div class="wishlist-items">
       <div class="item" v-for="item in wishlists">
-        <div class="wish-img">
-          <img
-            v-lazy="item.Images ? item.Images[0].Url : '/images/no_image.png'"
-            alt=""
-          />
+        <div class="item-info">
+          <div class="wish-img">
+            <img
+              v-lazy="item.Images ? item.Images[0].Url : '/images/no_image.png'"
+              alt=""
+            />
+          </div>
+          <div>
+            <h5 class="wish-title">{{ item.Name }}</h5>
+            <p class="wish-desc">{{ item.LongDescription }}</p>
+          </div>
         </div>
-        <div>
-          <h5 class="wish-title">{{ item.Name }}</h5>
-          <p class="wish-desc">{{ item.LongDescription }}</p>
-        </div>
-        <div class="icon-delete" @click="storeApp.removeWishlist(item)">
+        <div class="icon-delete" @click="storeWishlists.removeWishlist(item)">
           <div>
             <BIconTrash />
           </div>
@@ -47,8 +51,10 @@ const wishlists = computed(() => {
 </template>
 
 <script>
+import { mapState } from "pinia";
+
 export default {
-  name: "Filter",
+  name: "Wishlists",
   data() {
     return {
       keywords: "",
@@ -67,8 +73,8 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 75%;
-  width: 50%;
+  min-height: 50%;
+  width: 30%;
   border-radius: 1rem;
   padding: 1rem 1.5rem;
   box-shadow: 0 0 32px rgba($color: #000000, $alpha: 0.4);
@@ -99,14 +105,20 @@ export default {
 
   .item {
     display: flex;
+    justify-content: space-between;
     align-items: center;
+
+    .item-info {
+      display: flex;
+      align-items: center;
+    }
 
     .wish-img {
       margin-right: 1rem;
 
       img {
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 70px;
         object-fit: cover;
         border-radius: 8px;
       }
@@ -115,6 +127,7 @@ export default {
     .wish-title {
       margin-bottom: 4px;
       margin-top: 0;
+      font-size: 1rem;
     }
 
     .wish-desc {
@@ -128,7 +141,7 @@ export default {
     }
 
     .icon-delete {
-      font-size: 18px;
+      font-size: 16px;
       background-color: red;
       color: white;
       padding: 0.5rem;

@@ -2,9 +2,11 @@
 import { computed } from "@vue/runtime-core";
 import { useAppStore } from "../stores/app";
 import { useMapStore } from "../stores/map";
+import { useWishlistsStore } from "../stores/wishlists";
 
 const storeMap = useMapStore();
 const storeApp = useAppStore();
+const storeWishlists = useWishlistsStore();
 
 const path = computed(() => {
   return storeMap.path;
@@ -179,12 +181,21 @@ const markers = computed(() => {
       <div class="desc">
         {{ selectedActivity?.data?.LongDescription }}
       </div>
-      <div
-        class="wishlist"
-        v-if="selectedActivity?.data.Type === 3"
-        @click="storeApp.addToWishlists(selectedActivity)"
-      >
-        Add to Wishlists
+      <div v-if="selectedActivity?.data.Type === 3">
+        <div
+          class="wishlist"
+          @click="storeWishlists.addToWishlists(selectedActivity.data)"
+          v-if="!selectedActivity?.data.Wishlist"
+        >
+          Add to Wishlists
+        </div>
+        <div
+          class="wishlist remove"
+          @click="storeWishlists.removeWishlist(selectedActivity.data)"
+          v-if="selectedActivity?.data.Wishlist"
+        >
+          Remove from Wishlists
+        </div>
       </div>
     </div>
   </div>
@@ -359,7 +370,7 @@ export default {
 }
 
 .detail .img-carousel {
-  height: 200px;
+  height: 16vw;
 }
 
 .popupInfo {

@@ -1,14 +1,9 @@
 import { defineStore } from "pinia";
-import { useToast } from "vue-toastification";
-
-const toast = useToast();
 
 export const useAppStore = defineStore('app', {
     state: () => ({
         items: [],
         sortedItems: [],
-        wishlists: [],
-        wishlistsModal: false,
         itemsLoading: false,
         currentPage: 1,
         maxPerPage: 10,
@@ -36,34 +31,7 @@ export const useAppStore = defineStore('app', {
                 });
             });
         },
-        addToWishlists(item) {
-            if (this.wishlists.length > 0) {
-                if (this.wishlists.filter(e => e.Id === item.Id).length == 0) this.wishlists.push(item)
-            } else {
-                this.wishlists.push(item);
-            }
-            const app = useAppStore();
-            const selectedItem = app.items.find((el) => el.data.Id === item.Id);
-            if (selectedItem) {
-                selectedItem.data.Wishlist = true;
-            }
-            toast.success('Added to Whishlist!');
-        },
-        removeWishlist(item) {
-            this.wishlists = this.wishlists.filter(e => e.Id !== item.Id);
-            const app = useAppStore();
-            const selectedItem = app.items.find((el) => el.data.Id === item.Id);
-            if (selectedItem) {
-                selectedItem.data.Wishlist = false;
-            }
-            toast.info('Removed from Whislist');
-        },
-        toggleWishlists() {
-            this.wishlistsModal = !this.wishlistsModal;
-        },
-        closeWishlists() {
-            this.wishlistsModal = false
-        },
+
         sortItems() {
             const listItems = this.items.filter((el) => el.data.Type !== 5);
             let sorted = listItems;
@@ -95,7 +63,7 @@ export const useAppStore = defineStore('app', {
             }
             this.sortedItems = sorted.slice(0, this.currentPage * this.maxPerPage);
         },
-        
+
         loadMore() {
             this.currentPage += 1;
             this.sortItems();

@@ -14,14 +14,14 @@ import "vue-toastification/dist/index.css";
 
 const messages = {
   enUS: {
-    message: {
-      whislists: 'Whislists',
+    t: {
+      wishlists: 'Wishlists',
       filter: "Filter"
     }
   },
   zhCN: {
-    message: {
-      whislists: '名单',
+    t: {
+      wishlists: '名单',
       filter: '筛选'
     }
   }
@@ -29,8 +29,8 @@ const messages = {
 
 const i18n = createI18n({
   locale: 'enUS',
-  fallbackLocale: 'zhCN', 
-  messages, 
+  fallbackLocale: 'zhCN',
+  messages,
 })
 
 const toastOptions = {
