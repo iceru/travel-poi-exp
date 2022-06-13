@@ -23,12 +23,12 @@ export const useFilterStore = defineStore('filter', {
         closeFilter() {
             this.isOpen = false
         },
-        async quickSearch() {
+        async primaryLocations() {
             try {
-                await axios.post(url.endpoints.quickSearch, url.qsRequest(this.locationsName)).then((response) => {
+                await axios.post(url.endpoints.primaryLocations, url.bodyLocations).then((response) => {
                     console.log(response);
                 })
-            } catch(error) {
+            } catch (error) {
                 console.log(error);
             }
         },
@@ -37,13 +37,13 @@ export const useFilterStore = defineStore('filter', {
             const storePoi = usePoiStore();
             const storeExp = useExperiencesStore();
             const app = useAppStore();
-            const data = url.bodyServices;
+            const request = url.bodyServices();
 
             if (values.minRange !== 0) {
                 if (values.minRange === 0) {
-                    data.request.Filter.Bookability.RateRange = {};
+                    request.Filter.Bookability.RateRange = {};
                 } else {
-                    data.request.Filter.Bookability.RateRange = {
+                    request.Filter.Bookability.RateRange = {
                         Min: values.minRange,
                         Max: values.maxRange,
                     };
@@ -51,20 +51,20 @@ export const useFilterStore = defineStore('filter', {
             }
 
             if (values.date) {
-                data.request.Availability.Window.StartDate = values.date;
+                request.Availability.Window.StartDate = values.date;
             }
 
             if (values.pax) {
-                data.request.Filter.Bookability.GuestsCapability = values.pax;
+                request.Filter.Bookability.GuestsCapability = values.pax;
             }
 
             if (values.duration) {
-                data.request.Filter.Bookability.NightsCapability = values.duration;
+                request.Filter.Bookability.NightsCapability = values.duration;
             }
-            if (!values.categories.includes('poi') ) {
+            if (!values.categories.includes('poi')) {
                 app.items = app.items.filter(el => el.data.Type !== 6);
                 values.categories.filter(el => el !== 'poi');
-            } else if(app.items.filter(el => el.data.Type === 6).length === 0) {
+            } else if (app.items.filter(el => el.data.Type === 6).length === 0) {
                 app.mergeItems(storePoi.poi)
             }
 
@@ -77,12 +77,12 @@ export const useFilterStore = defineStore('filter', {
             const datas = ['poi', 'exp']
             const requestCategories = values.categories.filter(el => !datas.includes(el));
 
-            data.request.Filter.TagCriteria = {
+            request.Filter.TagCriteria = {
                 IndustryCategoryGroups: requestCategories,
             };
 
             if (app.sort) {
-                data.request.Sorting = [
+                request.Sorting = [
                     {
                         By: `${app.sort.split("-")[0]}`,
                         Direction: `${app.sort.split("-")[1]}`,
@@ -90,12 +90,12 @@ export const useFilterStore = defineStore('filter', {
                 ];
             }
             if (values.keywords) {
-                data.request.Filter.Names = [values.keywords];
+                request.Filter.Names = [values.keywords];
             } else {
-                delete data.request.Filter.Names;
+                delete request.Filter.Names;
             }
 
-            storeServices.fetchServices(url.bodyServices);
+            storeServices.fetchServices(request);
             app.itemsLoading = true;
             this.closeFilter();
         }

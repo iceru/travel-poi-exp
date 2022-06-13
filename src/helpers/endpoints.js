@@ -5,7 +5,7 @@ const pageEndpoint = `${baseEndpoint}/Pages`;
 
 const endpoints = {
   search: `${serviceEndpoint}/EntityService.jsws/Search`,
-  quickSearch: `${serviceEndpoint}/EntityService.jsws/QuickSearch`,
+  primaryLocations: `${serviceEndpoint}/EntityService.jsws/GetPrimaryLocations`,
   injection: `${serviceEndpoint}/Injection.aspx`,
   searchPage: `${pageEndpoint}/Search.aspx`,
   bookingQuote: `${serviceEndpoint}/BookingService.jsws/GetBookingQuote`,
@@ -122,7 +122,7 @@ const bodyServices = (lang = 'en-US', currency = 'GBP') => {
 }
 
 const bodyLocations = {
-  LocationType: 'Region'
+  LocationType: [0, 10, 30]
 }
 
 const quoteRequest = {

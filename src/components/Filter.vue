@@ -184,6 +184,7 @@ export default {
     outline: none;
     border: none;
     border-radius: 8px;
+    cursor: pointer;
   }
 
   @media screen and (max-width: 576px) {
