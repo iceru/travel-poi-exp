@@ -230,15 +230,15 @@ export default {
       iconAccomm: "/images/accommodation.png",
     };
   },
+  computed: {
+    ...mapWritableState(useMapStore, ["pathData"]),
+  },
   watch: {
-    pathDataAct: function (newPathdata, oldPathData) {
-      if (this.pathData.length > 0) {
+    pathData: function (newPathdata, oldPathData) {
+      if (newPathdata !== oldPathData) {
         this.startMapDetail();
       }
     },
-  },
-  computed: {
-    ...mapWritableState(useMapStore, ["pathData"]),
   },
   methods: {
     selectMarkerDetail(geo) {
@@ -250,8 +250,8 @@ export default {
 
     positioning(itenary) {
       this.selected = this.pathData[itenary];
-      this.centerDetail.lat = this.selected.position.lat;
-      this.centerDetail.lng = this.selected.position.lng;
+      this.centerDetail.lat = this.selected?.position?.lat;
+      this.centerDetail.lng = this.selected?.position?.lng;
     },
 
     nextMarker() {

@@ -47,7 +47,6 @@ export const useWishlistsStore = defineStore('wishlists', {
 
         searchInject() {
             const app = useAppStore();
-            debugger;
             let products = [];
 
             this.wishlists.map((item) => {

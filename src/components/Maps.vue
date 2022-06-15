@@ -51,8 +51,8 @@ const center = computed(() => {
         }"
         @click="
           storeMap.selectMarker(m);
-          selectMarker(m);
           storeMap.openSidebar();
+          showByIndex = index;
         "
         @mouseover="showByIndex = index"
         @mouseout="showByIndex = null"
@@ -124,10 +124,6 @@ export default {
 
       return icon;
     },
-
-    selectMarker(item) {
-      this.more = false;
-    },
   },
   components: { MapDetail },
 };
@@ -154,53 +150,13 @@ export default {
   text-overflow: ellipsis;
 }
 
-img[src="/images/poi.png"] {
-  filter: drop-shadow(0 0 6px #7868e6);
-  width: 35px !important;
-  height: 45px !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%);
-}
-
-img[src="/images/experience.png"] {
-  filter: drop-shadow(0 0 6px #a7d129);
-  width: 35px !important;
-  height: 45px !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%);
-}
-
-img[src="/images/activity.png"] {
-  filter: drop-shadow(0 0 6px #ea5455);
-  width: 35px !important;
-  height: 45px !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%);
-}
-
-img[src="/images/accommodation.png"] {
-  filter: drop-shadow(0 0 6px #2d4059);
-  width: 35px !important;
-  height: 45px !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%);
-}
-
-img[src="/images/restaurant.png"] {
-  filter: drop-shadow(0 0 6px #f07b3f);
-  width: 35px !important;
-  height: 45px !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%);
-}
-
+img[src="/images/poi.png"],
+img[src="/images/experience.png"],
+img[src="/images/activity.png"],
+img[src="/images/accommodation.png"],
+img[src="/images/restaurant.png"],
 img[src="/images/shopping.png"] {
-  filter: drop-shadow(0 0 6px #ffd460);
+  filter: drop-shadow(0 0 6px black);
   width: 35px !important;
   height: 45px !important;
   left: 50% !important;
