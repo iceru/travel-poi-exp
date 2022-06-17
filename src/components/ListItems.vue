@@ -54,6 +54,7 @@ const maxPerPage = computed(() => {
   </div>
   <div class="iconWishlists" @click="storeWishlists.toggleWishlists()">
     {{ $t("t.wishlists") }}
+    <span class="counter">{{ storeWishlists.wishlists.length }}</span>
     <BIconHeartFill />
   </div>
   <div class="container" :class="sidebar ? 'active' : ''">
@@ -259,9 +260,20 @@ export default {
     left: 34%;
   }
 
+  .counter {
+    position: absolute;
+    right: 19px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: white;
+    font-size: 12px;
+  }
+
   svg {
     margin-left: 0.5rem;
     margin-bottom: -3px;
+    font-size: 20px;
   }
 }
 

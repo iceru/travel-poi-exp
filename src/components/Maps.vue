@@ -107,7 +107,6 @@ export default {
   },
   methods: {
     checkObject(markers, selected) {
-      debugger;
       this.$refs.myMarkerRef.map((item) => {
         markers.map((m) => {
           if (
